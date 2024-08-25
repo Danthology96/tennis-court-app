@@ -22,29 +22,6 @@ class AppRouter {
           builder: (context, state) {
             return const WelcomePage();
           }),
-      // GoRoute(
-      //   parentNavigatorKey: _rootNavigatorKey,
-      //   path: SplashScreen.path,
-      //   name: SplashScreen.name,
-      //   builder: (context, state) => const SplashScreen(),
-      //   redirect: (context, state) {
-      //     final authCubit = context.read<AuthCubit>();
-      //     final authStatus = authCubit.state.authStatus;
-      //     if (authStatus == AuthStatus.notRegistered) {
-      //       return UserRegisterScreen.path;
-      //     }
-      //     if (authStatus == AuthStatus.notAuthenticated) {
-      //       return LoginScreen.path;
-      //     }
-      //     if (authStatus == AuthStatus.restaurantNotRegistered) {
-      //       return RestaurantFormScreen.path;
-      //     }
-      //     if (authStatus == AuthStatus.restaurantRegistered) {
-      //       return HomeView.path;
-      //     }
-      //     return null;
-      //   },
-      // ),
 
       /// User login Screen
       // GoRoute(
@@ -65,14 +42,25 @@ class AppRouter {
       // ),
 
       /// User Registration
-      // GoRoute(
-      //     parentNavigatorKey: _rootNavigatorKey,
-      //     path: UserRegisterScreen.path,
-      //     name: UserRegisterScreen.name,
-      //     pageBuilder: (context, state) => buildPageWithDefaultTransition(
-      //         context: context,
-      //         state: state,
-      //         child: const UserRegisterScreen())),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: RegisterPage.path,
+        name: RegisterPage.name,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const RegisterPage(),
+          transitionDuration: const Duration(milliseconds: 300),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              SlideTransition(
+                  position: animation.drive(
+                    Tween<Offset>(
+                      begin: const Offset(0.75, 0),
+                      end: Offset.zero,
+                    ),
+                  ),
+                  child: child),
+        ),
+      ),
 
       /// StatefullShellRoute used to preserve the state of the routes included
       /// in the bottomnavigationbar tabs, each tab will have it's own routes

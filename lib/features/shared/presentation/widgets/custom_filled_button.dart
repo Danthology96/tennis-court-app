@@ -21,13 +21,13 @@ class CustomFilledButton extends StatelessWidget {
       onPressed: onPressed,
       style: FilledButton.styleFrom(
         backgroundColor: color ?? colorScheme.surfaceContainer,
-        minimumSize: const Size(double.infinity, 40),
+        minimumSize: const Size(double.infinity, 50),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
       ),
       child: Text(
-        text?.toUpperCase() ?? '',
+        text ?? '',
         style: textTheme.titleMedium?.copyWith(
           color: textColor ?? colorScheme.surface,
           fontWeight: FontWeight.w600,

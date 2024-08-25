@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tennis_court_app/features/auth/auth.dart';
 import 'package:tennis_court_app/features/shared/shared.dart';
 
 class WelcomePage extends StatelessWidget {
@@ -26,8 +28,7 @@ class WelcomePage extends StatelessWidget {
           left: 120,
           right: 120,
           child: Container(
-            height: 100,
-            width: 100,
+            height: 120,
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/images/logo.png'),
@@ -50,7 +51,9 @@ class WelcomePage extends StatelessWidget {
                 const SizedBox(height: 20),
                 CustomFilledButton(
                   text: 'Registrarme',
-                  onPressed: () {},
+                  onPressed: () {
+                    context.pushNamed(RegisterPage.name);
+                  },
                   color: colorScheme.onSurfaceVariant,
                 ),
               ],
