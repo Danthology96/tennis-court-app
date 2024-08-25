@@ -13,14 +13,14 @@ class AppRouter {
   AppRouter();
 
   late final GoRouter router = GoRouter(
-    initialLocation: WelcomeScreen.path,
+    initialLocation: WelcomePage.path,
     navigatorKey: _rootNavigatorKey,
     debugLogDiagnostics: true,
     routes: <RouteBase>[
       GoRoute(
-          path: WelcomeScreen.path,
+          path: WelcomePage.path,
           builder: (context, state) {
-            return const WelcomeScreen();
+            return const WelcomePage();
           }),
       // GoRoute(
       //   parentNavigatorKey: _rootNavigatorKey,
