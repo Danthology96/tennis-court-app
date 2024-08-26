@@ -95,7 +95,7 @@ class AppRouter {
 
           return MainScreen(navigationShell: navigationShell);
         },
-        branches: [homeBranch],
+        branches: mainBranch,
       ),
     ],
   );
