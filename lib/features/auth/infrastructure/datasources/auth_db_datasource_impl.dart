@@ -5,6 +5,7 @@ import 'package:tennis_court_app/config/config.dart';
 
 import 'package:tennis_court_app/features/auth/domain/domain.dart';
 import 'package:tennis_court_app/features/auth/infrastructure/infrastructure.dart';
+import 'package:tennis_court_app/features/shared/presentation/widgets/toasts/toast_alerts_widget.dart';
 
 /// Class that contains the local db as the source
 class AuthDBDataSourceImpl implements AuthDataSource {
@@ -29,6 +30,7 @@ class AuthDBDataSourceImpl implements AuthDataSource {
   /// Register a user to the local database
   @override
   Future<bool?> registerUser({required Map<String, dynamic> user}) async {
+    customToastAlerts(type: AlertType.loading);
     final isar = await db;
     final users = isar.users;
 
@@ -38,6 +40,10 @@ class AuthDBDataSourceImpl implements AuthDataSource {
 
     /// if the user exists, return false
     if (userExists != null) {
+      /// to simulate a loading time
+      await closeLoadingScreen();
+      customToastAlerts(
+          type: AlertType.success, message: 'Usuario registrado correctamente');
       return false;
     } else {
       final random = Random();
@@ -55,6 +61,11 @@ class AuthDBDataSourceImpl implements AuthDataSource {
             token:
                 createToken(email: user['email'], password: user['password'])));
       });
+
+      /// to simulate a loading time
+      await closeLoadingScreen();
+      customToastAlerts(
+          type: AlertType.success, message: 'Usuario registrado correctamente');
       return true;
     }
   }
@@ -63,6 +74,7 @@ class AuthDBDataSourceImpl implements AuthDataSource {
   @override
   Future<User?> loginUser(
       {required String email, required String password}) async {
+    customToastAlerts(type: AlertType.loading);
     final isar = await db;
     final user = await isar.users
         .where()
@@ -70,6 +82,19 @@ class AuthDBDataSourceImpl implements AuthDataSource {
         .emailEqualTo(email)
         .passwordEqualTo(password)
         .findFirst();
+    if (user != null) {
+      /// to simulate a loading time
+      await closeLoadingScreen();
+      customToastAlerts(
+          type: AlertType.success, message: 'Bienvenido ${user.names}');
+      return user;
+    } else {
+      /// to simulate a loading time
+      await closeLoadingScreen();
+      customToastAlerts(
+          type: AlertType.error, message: 'email o contraseña incorrectos');
+    }
+
     return user;
   }
 

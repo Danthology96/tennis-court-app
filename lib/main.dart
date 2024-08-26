@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'Tennis Court App',
       theme: AppTheme().getTheme(),
+      builder: BotToastInit(),
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );

@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tennis_court_app/config/router/home_branch.dart';
@@ -13,6 +14,7 @@ class AppRouter {
   AppRouter();
 
   late final GoRouter router = GoRouter(
+    observers: [BotToastNavigatorObserver()],
     initialLocation: WelcomePage.path,
     navigatorKey: _rootNavigatorKey,
     debugLogDiagnostics: true,

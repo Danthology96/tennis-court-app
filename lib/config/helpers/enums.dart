@@ -17,3 +17,18 @@ enum AuthStatus {
 /// - [success] : when the db returns a success code
 /// - [failed] : when the db returns an error code
 enum FormStatus { invalid, valid, validating, posting, success, failed }
+
+/// Enum for easyloading alert types
+/// - [success] : Represents a success easyloading type
+/// - [error] : Represents an easyloading error type
+/// - [loading] : Represents the general loading blur widget
+/// - [warning] : Represents a warning alert
+/// - [info] : Represents an info alert dialog
+enum AlertType {
+  success,
+  error,
+  loading,
+  warning,
+  info,
+  modal,
+}
