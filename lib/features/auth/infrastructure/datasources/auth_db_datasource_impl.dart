@@ -1,6 +1,8 @@
+import 'dart:math';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tennis_court_app/config/config.dart';
+
 import 'package:tennis_court_app/features/auth/domain/domain.dart';
 import 'package:tennis_court_app/features/auth/infrastructure/infrastructure.dart';
 
@@ -18,6 +20,7 @@ class AuthDBDataSourceImpl implements AuthDataSource {
       return await Isar.open(
         [UserSchema],
         directory: dir.path,
+        inspector: true,
       );
     }
     return Future.value(Isar.getInstance());
@@ -37,11 +40,14 @@ class AuthDBDataSourceImpl implements AuthDataSource {
     if (userExists != null) {
       return false;
     } else {
+      final random = Random();
+      final id = random.nextInt(1000);
+
       /// method to add the user to the database
       await isar.writeTxn(() async {
         /// if the user does not exist, add the user to the database
         await users.put(User(
-            id: user['id'],
+            id: id.toString(),
             names: user['names'],
             email: user['email'],
             phone: user['phone'],

@@ -19,16 +19,10 @@ class UserLoginCubit extends Cubit<UserLoginState> {
       isPosted: true,
     ));
 
-    /// If the form is valid, it will call the auth cubit to login the user
-    if (state.isValid) {
-      emit(state.copyWith(formStatus: FormStatus.posting));
+    emit(state.copyWith(formStatus: FormStatus.posting));
 
-      /// Calls the auth cubit to login the user
-      return await authCubit.loginUser(email, password, state.rememberMe);
-    } else {
-      emit(state.copyWith(formStatus: FormStatus.invalid));
-      return false;
-    }
+    /// Calls the auth cubit to login the user
+    return await authCubit.loginUser(email, password, state.rememberMe);
   }
 
   /// Method when user checks/unchecks the box of remember me in login form
@@ -38,5 +32,10 @@ class UserLoginCubit extends Cubit<UserLoginState> {
     } else {
       emit(state.copyWith(rememberMe: true));
     }
+  }
+
+  /// function to change the validity of the form
+  void isValidChanged(bool isValid) {
+    emit(state.copyWith(isValid: isValid));
   }
 }

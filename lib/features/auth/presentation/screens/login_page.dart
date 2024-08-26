@@ -6,12 +6,13 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tennis_court_app/features/auth/infrastructure/infrastructure.dart';
 import 'package:tennis_court_app/features/auth/presentation/presentation.dart';
+import 'package:tennis_court_app/features/reserve/reserve.dart';
 import 'package:tennis_court_app/features/shared/shared.dart';
 
-class RegisterPage extends StatelessWidget {
-  const RegisterPage({super.key});
+class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
 
-  static const name = 'register';
+  static const name = 'login';
   static const path = '/$name';
 
   @override
@@ -24,29 +25,28 @@ class RegisterPage extends StatelessWidget {
     final authCubit = context.read<AuthCubit>();
     return Scaffold(
         body: BlocProvider(
-      create: (context) => UserRegisterCubit(
+      create: (context) => UserLoginCubit(
         authCubit: authCubit,
         authRepository: authRepository,
       ),
-      child: const _RegisterPageBody(),
+      child: const _LoginPageBody(),
     ));
   }
 }
 
-class _RegisterPageBody extends StatefulWidget {
-  const _RegisterPageBody();
+class _LoginPageBody extends StatefulWidget {
+  const _LoginPageBody();
 
   @override
-  State<_RegisterPageBody> createState() => __RegisterPageStateBody();
+  State<_LoginPageBody> createState() => __LoginPageStateBody();
 }
 
-class __RegisterPageStateBody extends State<_RegisterPageBody> {
+class __LoginPageStateBody extends State<_LoginPageBody> {
   /// booleans to identify either the user wants to see the password text or not
   bool passwordObscure = true;
-  bool confirmPasswordObscure = true;
 
   /// form key to validate the form
-  static final GlobalKey<FormBuilderState> _registerFormKey =
+  static final GlobalKey<FormBuilderState> _loginFormKey =
       GlobalKey<FormBuilderState>();
 
   @override
@@ -54,7 +54,7 @@ class __RegisterPageStateBody extends State<_RegisterPageBody> {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     const spacer = SizedBox(height: 20);
-    final registerCubit = context.watch<UserRegisterCubit>();
+    final loginCubit = context.watch<UserLoginCubit>();
 
     return SingleChildScrollView(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -120,43 +120,24 @@ class __RegisterPageStateBody extends State<_RegisterPageBody> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Registro',
+              'Iniciar sesión',
               style: textTheme.headlineSmall?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 45),
             FormBuilder(
-              key: _registerFormKey,
+              key: _loginFormKey,
               child: Column(
                 children: [
                   CustomTextFormField(
-                    name: 'names',
-                    hintText: 'Nombre y apellido',
-                    prefixIcon:
-                        const PrefixFormIcon(icon: Icons.person_outline),
-                    validator: FormBuilderValidators.required(),
-                  ),
-                  spacer,
-                  CustomTextFormField(
                     name: 'email',
-                    hintText: 'Correo electrónico',
+                    hintText: 'Email',
                     prefixIcon:
                         const PrefixFormIcon(icon: Icons.email_outlined),
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(),
                       FormBuilderValidators.email(),
-                    ]),
-                  ),
-                  spacer,
-                  CustomTextFormField(
-                    name: 'phone',
-                    hintText: 'Teléfono',
-                    prefixIcon:
-                        const PrefixFormIcon(icon: Icons.phone_outlined),
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.numeric(),
                     ]),
                   ),
                   spacer,
@@ -182,47 +163,29 @@ class __RegisterPageStateBody extends State<_RegisterPageBody> {
                     ]),
                   ),
                   spacer,
-                  CustomTextFormField(
-                    name: 'confirmPassword',
-                    hintText: 'Confirmar contraseña',
-                    prefixIcon: const PrefixFormIcon(icon: Icons.lock_outline),
-                    suffixIcon: IconButton(
-                        icon: const Icon(Icons.remove_red_eye_outlined),
-                        onPressed: () {
-                          setState(() {
-                            if (confirmPasswordObscure == true) {
-                              confirmPasswordObscure = false;
-                            } else {
-                              confirmPasswordObscure = true;
-                            }
-                          });
-                        }),
-                    obscureText: confirmPasswordObscure,
-                    validator: FormBuilderValidators.compose([
-                      if (_registerFormKey
-                              .currentState?.instantValue["password"] !=
-                          null)
-                        FormBuilderValidators.equal(
-                          _registerFormKey
-                              .currentState?.instantValue["password"],
-                          errorText: "Las contraseñas no coinciden",
-                        ),
-                    ]),
+                  CustomCheckTileWidget(
+                    value: loginCubit.state.rememberMe,
+                    text: "Recordar contraseña",
+                    horizontalGapPadding: 5,
+                    onChanged: (value) => loginCubit.rememberMeChanged(),
                   ),
                   spacer,
                   CustomFilledButton(
-                    text: 'Registrarme',
+                    text: 'Iniciar sesión',
                     onPressed: () async {
-                      _registerFormKey.currentState?.saveAndValidate();
+                      _loginFormKey.currentState?.saveAndValidate();
                       final isValid =
-                          _registerFormKey.currentState?.isValid == true;
+                          _loginFormKey.currentState?.isValid == true;
                       if (isValid) {
-                        registerCubit
+                        loginCubit.isValidChanged(isValid);
+                        loginCubit
                             .onSubmit(
-                                _registerFormKey.currentState?.value ?? {})
+                          _loginFormKey.currentState?.value['email'],
+                          _loginFormKey.currentState?.value['password'],
+                        )
                             .then((result) {
                           if (result == true) {
-                            context.go(LoginPage.path);
+                            context.goNamed(HomePage.name);
                           }
                         });
                       }
@@ -232,23 +195,21 @@ class __RegisterPageStateBody extends State<_RegisterPageBody> {
                   spacer,
                   RichText(
                       text: TextSpan(
-                    text: 'Ya tengo cuenta ',
+                    text: 'Aún no tienes cuenta? ',
                     style: textTheme.bodyMedium,
                     children: [
                       TextSpan(
-                        text: 'Iniciar sesión',
+                        text: 'Regístrate',
                         style: textTheme.bodyMedium?.copyWith(
                           color: colorScheme.tertiary,
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            context.pushReplacementNamed(LoginPage.name);
+                            context.pushReplacementNamed(RegisterPage.name);
                           },
                       ),
                     ],
                   )),
-                  spacer,
-                  spacer,
                 ],
               ),
             ),

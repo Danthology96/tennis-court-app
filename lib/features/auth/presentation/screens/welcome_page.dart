@@ -46,7 +46,9 @@ class WelcomePage extends StatelessWidget {
               children: <Widget>[
                 CustomFilledButton(
                   text: 'Iniciar sesión',
-                  onPressed: () {},
+                  onPressed: () {
+                    context.pushNamed(LoginPage.name);
+                  },
                 ),
                 const SizedBox(height: 20),
                 CustomFilledButton(

@@ -22,26 +22,20 @@ class UserRegisterCubit extends Cubit<UserRegisterFormState> {
       formStatus: FormStatus.validating,
     ));
 
-    /// If the form is valid, it will call the auth cubit to register the user
-    if (state.isValid) {
-      final userJson = {
-        "names": user["names"],
-        "email": user["email"],
-        "password": user["password"],
-        "phone": user["phone"],
-      };
-      emit(state.copyWith(formStatus: FormStatus.posting));
-      return await authCubit.registerUser(userJson).then((value) {
-        if (value == true) {
-          emit(state.copyWith(formStatus: FormStatus.success));
-        } else {
-          emit(state.copyWith(formStatus: FormStatus.failed));
-        }
-        return value;
-      });
-    } else {
-      emit(state.copyWith(formStatus: FormStatus.invalid));
-      return false;
-    }
+    final userJson = {
+      "names": user["names"],
+      "email": user["email"],
+      "password": user["password"],
+      "phone": user["phone"],
+    };
+    emit(state.copyWith(formStatus: FormStatus.posting));
+    return await authCubit.registerUser(userJson).then((value) {
+      if (value == true) {
+        emit(state.copyWith(formStatus: FormStatus.success));
+      } else {
+        emit(state.copyWith(formStatus: FormStatus.failed));
+      }
+      return value;
+    });
   }
 }

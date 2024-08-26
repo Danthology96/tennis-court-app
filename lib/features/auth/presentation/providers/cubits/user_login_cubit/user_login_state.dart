@@ -4,16 +4,12 @@ class UserLoginState extends Equatable {
   /// Current status of the form
   final FormStatus formStatus;
 
-  /// Variable to know if the current state of the form is valid
-  final bool isValid;
-
   final bool isPosted;
   final bool rememberMe;
 
   /// Class default constructor
   const UserLoginState({
     this.formStatus = FormStatus.invalid,
-    this.isValid = false,
     this.isPosted = false,
     this.rememberMe = true,
   });
@@ -28,7 +24,6 @@ class UserLoginState extends Equatable {
   }) =>
       UserLoginState(
         formStatus: formStatus ?? this.formStatus,
-        isValid: isValid ?? this.isValid,
         isPosted: isPosted ?? this.isPosted,
         rememberMe: rememberMe ?? this.rememberMe,
       );
@@ -37,7 +32,6 @@ class UserLoginState extends Equatable {
   @override
   List<Object> get props => [
         formStatus,
-        isValid,
         rememberMe,
         isPosted,
       ];

@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tennis_court_app/config/theme/app_theme.dart';
 
 import 'config/router/app_router.dart';
+import 'features/auth/auth.dart';
+import 'features/shared/services/secure_storage_key_value_storage_service_impl.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiBlocProvider(providers: [
+    BlocProvider(
+      create: (context) => AuthCubit(
+        authRepository: AuthDBRepositoryImpl(),
+        secureStorageService: SecureStorageKeyValueStorageServiceImpl(),
+      ),
+    ),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

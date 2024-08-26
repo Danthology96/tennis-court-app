@@ -24,22 +24,25 @@ class AppRouter {
           }),
 
       /// User login Screen
-      // GoRoute(
-      //   parentNavigatorKey: _rootNavigatorKey,
-      //   path: LoginScreen.path,
-      //   name: LoginScreen.name,
-      //   pageBuilder: (context, state) => buildPageWithDefaultTransition(
-      //       context: context, state: state, child: const LoginScreen()),
-      //   redirect: (context, state) {
-      //     final authCubit = context.read<AuthCubit>();
-      //     final authStatus = authCubit.state.authStatus;
-
-      //     if (authStatus == AuthStatus.restaurantNotRegistered) {
-      //       return RestaurantFormScreen.path;
-      //     }
-      //     return null;
-      //   },
-      // ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: LoginPage.path,
+        name: LoginPage.name,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const LoginPage(),
+          transitionDuration: const Duration(milliseconds: 300),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              SlideTransition(
+                  position: animation.drive(
+                    Tween<Offset>(
+                      begin: const Offset(0.75, 0),
+                      end: Offset.zero,
+                    ),
+                  ),
+                  child: child),
+        ),
+      ),
 
       /// User Registration
       GoRoute(
