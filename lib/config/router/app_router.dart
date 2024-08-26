@@ -1,5 +1,8 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tennis_court_app/config/helpers/helpers.dart';
 import 'package:tennis_court_app/config/router/home_branch.dart';
 import 'package:tennis_court_app/features/auth/auth.dart';
 import 'package:tennis_court_app/features/reserve/reserve.dart';
@@ -13,66 +16,71 @@ class AppRouter {
   AppRouter();
 
   late final GoRouter router = GoRouter(
-    initialLocation: WelcomeScreen.path,
+    observers: [BotToastNavigatorObserver()],
+    initialLocation: WelcomePage.path,
     navigatorKey: _rootNavigatorKey,
     debugLogDiagnostics: true,
     routes: <RouteBase>[
       GoRoute(
-          path: WelcomeScreen.path,
-          builder: (context, state) {
-            return const WelcomeScreen();
-          }),
-      // GoRoute(
-      //   parentNavigatorKey: _rootNavigatorKey,
-      //   path: SplashScreen.path,
-      //   name: SplashScreen.name,
-      //   builder: (context, state) => const SplashScreen(),
-      //   redirect: (context, state) {
-      //     final authCubit = context.read<AuthCubit>();
-      //     final authStatus = authCubit.state.authStatus;
-      //     if (authStatus == AuthStatus.notRegistered) {
-      //       return UserRegisterScreen.path;
-      //     }
-      //     if (authStatus == AuthStatus.notAuthenticated) {
-      //       return LoginScreen.path;
-      //     }
-      //     if (authStatus == AuthStatus.restaurantNotRegistered) {
-      //       return RestaurantFormScreen.path;
-      //     }
-      //     if (authStatus == AuthStatus.restaurantRegistered) {
-      //       return HomeView.path;
-      //     }
-      //     return null;
-      //   },
-      // ),
+        path: WelcomePage.path,
+        builder: (context, state) {
+          return const WelcomePage();
+        },
+        redirect: (context, state) {
+          final authCubit = context.read<AuthCubit>();
+          final authStatus = authCubit.state.authStatus;
+          if (authStatus == AuthStatus.notRegistered) {
+            return RegisterPage.path;
+          }
+          if (authStatus == AuthStatus.notAuthenticated) {
+            return LoginPage.path;
+          }
+
+          return null;
+        },
+      ),
 
       /// User login Screen
-      // GoRoute(
-      //   parentNavigatorKey: _rootNavigatorKey,
-      //   path: LoginScreen.path,
-      //   name: LoginScreen.name,
-      //   pageBuilder: (context, state) => buildPageWithDefaultTransition(
-      //       context: context, state: state, child: const LoginScreen()),
-      //   redirect: (context, state) {
-      //     final authCubit = context.read<AuthCubit>();
-      //     final authStatus = authCubit.state.authStatus;
-
-      //     if (authStatus == AuthStatus.restaurantNotRegistered) {
-      //       return RestaurantFormScreen.path;
-      //     }
-      //     return null;
-      //   },
-      // ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: LoginPage.path,
+        name: LoginPage.name,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const LoginPage(),
+          transitionDuration: const Duration(milliseconds: 300),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              SlideTransition(
+                  position: animation.drive(
+                    Tween<Offset>(
+                      begin: const Offset(0.75, 0),
+                      end: Offset.zero,
+                    ),
+                  ),
+                  child: child),
+        ),
+      ),
 
       /// User Registration
-      // GoRoute(
-      //     parentNavigatorKey: _rootNavigatorKey,
-      //     path: UserRegisterScreen.path,
-      //     name: UserRegisterScreen.name,
-      //     pageBuilder: (context, state) => buildPageWithDefaultTransition(
-      //         context: context,
-      //         state: state,
-      //         child: const UserRegisterScreen())),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: RegisterPage.path,
+        name: RegisterPage.name,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const RegisterPage(),
+          transitionDuration: const Duration(milliseconds: 300),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+              SlideTransition(
+                  position: animation.drive(
+                    Tween<Offset>(
+                      begin: const Offset(0.75, 0),
+                      end: Offset.zero,
+                    ),
+                  ),
+                  child: child),
+        ),
+      ),
 
       /// StatefullShellRoute used to preserve the state of the routes included
       /// in the bottomnavigationbar tabs, each tab will have it's own routes
