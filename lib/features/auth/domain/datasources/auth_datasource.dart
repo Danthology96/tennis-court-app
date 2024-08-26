@@ -1,8 +1,7 @@
 import '../../infrastructure/entities/user.dart';
 
 /// Data origins for authentication
-/// (Can be anyone, in this app, we will only have 1 datasource
-/// (DB))
+/// This datasource will use the local db (Isar)
 abstract class AuthDataSource {
   /// This function will login the user with the email and password
   Future<User?> loginUser({required String email, required String password});

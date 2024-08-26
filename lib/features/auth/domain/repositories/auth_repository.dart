@@ -1,7 +1,7 @@
 import '../../infrastructure/entities/user.dart';
 
-/// Data origins (Can be anyone, in this app, we will only have 1 datasource
-/// (DB))
+/// Data origins for authentication
+/// This datasource will use the local db (Isar)
 abstract class AuthRepository {
   /// This function should return all the auth information like:
   /// - user info

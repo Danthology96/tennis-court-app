@@ -1,8 +1,13 @@
 import 'dart:convert';
-import 'package:equatable/equatable.dart';
+import 'package:isar/isar.dart';
+
+part 'user.g.dart';
 
 /// User class, contains all the info of the user
-class User extends Equatable {
+@collection
+class User {
+  Id? isarId; // you can also use id = null to auto increment
+
   final String id;
   final String? token;
   final String names;
@@ -10,7 +15,7 @@ class User extends Equatable {
   final String? password;
   final String phone;
 
-  const User({
+  User({
     required this.id,
     required this.names,
     required this.email,
@@ -37,7 +42,7 @@ class User extends Equatable {
       );
 
   factory User.empty() =>
-      const User(id: "", names: "", email: "", password: "", phone: "");
+      User(id: "", names: "", email: "", password: "", phone: "");
 
   factory User.fromJson(String str, {String? token}) =>
       User.fromMap(json.decode(str), token: token);
@@ -60,12 +65,4 @@ class User extends Equatable {
         "email": email,
         "phone": phone,
       };
-
-  @override
-  List<Object?> get props => [
-        names,
-        email,
-        phone,
-        token,
-      ];
 }
