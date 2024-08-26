@@ -60,7 +60,7 @@ class _CustomAlertWidget extends StatelessWidget {
     final textStyle = textTheme.bodyLarge?.copyWith(
       fontWeight: FontWeight.bold,
       fontSize: 16,
-      color: colorScheme.primary,
+      color: colorScheme.surface,
     );
 
     Color cardColor = colorScheme.surfaceContainerHighest;
@@ -68,10 +68,10 @@ class _CustomAlertWidget extends StatelessWidget {
     /// This is the color of the alert, it depends on the type of alert
     switch (alertType) {
       case AlertType.info:
-        cardColor = colorScheme.surfaceContainerHighest;
+        cardColor = colorScheme.tertiary;
         break;
       case AlertType.success:
-        cardColor = colorScheme.secondaryContainer;
+        cardColor = colorScheme.surfaceContainer;
         break;
       case AlertType.error:
         cardColor = colorScheme.error;

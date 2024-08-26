@@ -1,6 +1,8 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tennis_court_app/config/helpers/helpers.dart';
 import 'package:tennis_court_app/config/router/home_branch.dart';
 import 'package:tennis_court_app/features/auth/auth.dart';
 import 'package:tennis_court_app/features/reserve/reserve.dart';
@@ -20,10 +22,23 @@ class AppRouter {
     debugLogDiagnostics: true,
     routes: <RouteBase>[
       GoRoute(
-          path: WelcomePage.path,
-          builder: (context, state) {
-            return const WelcomePage();
-          }),
+        path: WelcomePage.path,
+        builder: (context, state) {
+          return const WelcomePage();
+        },
+        redirect: (context, state) {
+          final authCubit = context.read<AuthCubit>();
+          final authStatus = authCubit.state.authStatus;
+          if (authStatus == AuthStatus.notRegistered) {
+            return RegisterPage.path;
+          }
+          if (authStatus == AuthStatus.notAuthenticated) {
+            return LoginPage.path;
+          }
+
+          return null;
+        },
+      ),
 
       /// User login Screen
       GoRoute(
