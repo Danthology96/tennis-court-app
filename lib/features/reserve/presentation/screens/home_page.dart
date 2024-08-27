@@ -50,16 +50,21 @@ class CourtsHorizontalListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 320,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        itemCount: 3,
-        separatorBuilder: (context, index) => const SizedBox(width: 20),
-        itemBuilder: (context, index) {
-          return const ReserveCard();
-        },
+    return const SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: BouncingScrollPhysics(),
+      child: Row(
+        children: [
+          ReserveCard(),
+          SizedBox(
+            width: 20,
+          ),
+          ReserveCard(),
+          SizedBox(
+            width: 20,
+          ),
+          ReserveCard(),
+        ],
       ),
     );
   }
