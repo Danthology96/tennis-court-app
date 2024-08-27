@@ -7,11 +7,15 @@ class CustomFilledButton extends StatelessWidget {
     this.color,
     this.textColor,
     this.onPressed,
+    this.height,
+    this.textStyle,
   });
   final void Function()? onPressed;
   final String? text;
   final Color? color;
   final Color? textColor;
+  final double? height;
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -21,17 +25,18 @@ class CustomFilledButton extends StatelessWidget {
       onPressed: onPressed,
       style: FilledButton.styleFrom(
         backgroundColor: color ?? colorScheme.surfaceContainer,
-        minimumSize: const Size(double.infinity, 50),
+        minimumSize: Size(double.infinity, height ?? 50),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
       ),
       child: Text(
         text ?? '',
-        style: textTheme.titleMedium?.copyWith(
-          color: textColor ?? colorScheme.surface,
-          fontWeight: FontWeight.w600,
-        ),
+        style: textStyle ??
+            textTheme.titleMedium?.copyWith(
+              color: textColor ?? colorScheme.surface,
+              fontWeight: FontWeight.w600,
+            ),
       ),
     );
   }

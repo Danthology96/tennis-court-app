@@ -19,4 +19,5 @@ final appColorScheme = ColorScheme.fromSeed(
   /// used for gray text color
   onSurfaceVariant: AppColors.grayTextColor,
   surfaceContainer: AppColors.containerColor,
+  surfaceContainerHighest: AppColors.backgroundGrayColor,
 );
