@@ -53,21 +53,7 @@ const UserSchema = CollectionSchema(
   deserialize: _userDeserialize,
   deserializeProp: _userDeserializeProp,
   idName: r'isarId',
-  indexes: {
-    r'id': IndexSchema(
-      id: -3268401673993471357,
-      name: r'id',
-      unique: true,
-      replace: false,
-      properties: [
-        IndexPropertySchema(
-          name: r'id',
-          type: IndexType.hash,
-          caseSensitive: true,
-        )
-      ],
-    )
-  },
+  indexes: {},
   links: {},
   embeddedSchemas: {},
   getId: _userGetId,
@@ -169,60 +155,6 @@ void _userAttach(IsarCollection<dynamic> col, Id id, User object) {
   object.isarId = id;
 }
 
-extension UserByIndex on IsarCollection<User> {
-  Future<User?> getById(String id) {
-    return getByIndex(r'id', [id]);
-  }
-
-  User? getByIdSync(String id) {
-    return getByIndexSync(r'id', [id]);
-  }
-
-  Future<bool> deleteById(String id) {
-    return deleteByIndex(r'id', [id]);
-  }
-
-  bool deleteByIdSync(String id) {
-    return deleteByIndexSync(r'id', [id]);
-  }
-
-  Future<List<User?>> getAllById(List<String> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return getAllByIndex(r'id', values);
-  }
-
-  List<User?> getAllByIdSync(List<String> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return getAllByIndexSync(r'id', values);
-  }
-
-  Future<int> deleteAllById(List<String> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return deleteAllByIndex(r'id', values);
-  }
-
-  int deleteAllByIdSync(List<String> idValues) {
-    final values = idValues.map((e) => [e]).toList();
-    return deleteAllByIndexSync(r'id', values);
-  }
-
-  Future<Id> putById(User object) {
-    return putByIndex(r'id', object);
-  }
-
-  Id putByIdSync(User object, {bool saveLinks = true}) {
-    return putByIndexSync(r'id', object, saveLinks: saveLinks);
-  }
-
-  Future<List<Id>> putAllById(List<User> objects) {
-    return putAllByIndex(r'id', objects);
-  }
-
-  List<Id> putAllByIdSync(List<User> objects, {bool saveLinks = true}) {
-    return putAllByIndexSync(r'id', objects, saveLinks: saveLinks);
-  }
-}
-
 extension UserQueryWhereSort on QueryBuilder<User, User, QWhere> {
   QueryBuilder<User, User, QAfterWhere> anyIsarId() {
     return QueryBuilder.apply(this, (query) {
@@ -294,49 +226,6 @@ extension UserQueryWhere on QueryBuilder<User, User, QWhereClause> {
         upper: upperIsarId,
         includeUpper: includeUpper,
       ));
-    });
-  }
-
-  QueryBuilder<User, User, QAfterWhereClause> idEqualTo(String id) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addWhereClause(IndexWhereClause.equalTo(
-        indexName: r'id',
-        value: [id],
-      ));
-    });
-  }
-
-  QueryBuilder<User, User, QAfterWhereClause> idNotEqualTo(String id) {
-    return QueryBuilder.apply(this, (query) {
-      if (query.whereSort == Sort.asc) {
-        return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
-              lower: [],
-              upper: [id],
-              includeUpper: false,
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
-              lower: [id],
-              includeLower: false,
-              upper: [],
-            ));
-      } else {
-        return query
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
-              lower: [id],
-              includeLower: false,
-              upper: [],
-            ))
-            .addWhereClause(IndexWhereClause.between(
-              indexName: r'id',
-              lower: [],
-              upper: [id],
-              includeUpper: false,
-            ));
-      }
     });
   }
 }

@@ -7,7 +7,6 @@ part 'user.g.dart';
 @collection
 class User {
   Id? isarId; // you can also use id = null to auto increment
-  @Index(unique: true)
   final String id;
   final String? token;
   final String names;
