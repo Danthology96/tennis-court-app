@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tennis_court_app/features/shared/presentation/widgets/appbar/appbar.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
@@ -34,10 +35,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       centerTitle: false,
       actions: [
-        const CircleAvatar(
-          foregroundImage: AssetImage('assets/images/profile.jpg'),
-          maxRadius: 12,
-        ),
+        const ProfileCircleAvatar(),
         IconButton(
             onPressed: () {},
             icon: Icon(
