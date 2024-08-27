@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tennis_court_app/features/reserve/reserve.dart';
 import 'package:tennis_court_app/features/shared/shared.dart';
 
 class ReservationCard extends StatelessWidget {
@@ -56,21 +57,7 @@ class ReservationCard extends StatelessWidget {
                     const SizedBox(
                       width: 10,
                     ),
-                    Row(
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/rainy_icon.svg',
-                          width: 16,
-                          height: 16,
-                        ),
-                        const SizedBox(width: 5),
-                        const Text(
-                          '100%',
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                      ],
-                    ),
+                    const ClimateWidget(),
                   ],
                 ),
                 Text('Cancha tipo A', style: captionTheme),
@@ -91,52 +78,15 @@ class ReservationCard extends StatelessWidget {
                   ],
                 ),
                 spacer,
-                Row(
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          'Disponible',
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: captionTheme,
-                        ),
-                        const SizedBox(width: 5),
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: colorScheme.tertiary),
-                        )
-                      ],
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.access_time_outlined,
-                            size: 13,
-                          ),
-                          const SizedBox(width: 5),
-                          Text(
-                            '10:00 am a 12:00pm',
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: captionTheme,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                const CourtAvailability(),
                 spacer,
                 spacer,
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: CustomFilledButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      context.pushNamed(ReservationPage.name);
+                    },
                     height: 32,
                     text: 'Reservar',
                     textStyle: textTheme.bodySmall?.copyWith(

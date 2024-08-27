@@ -1,6 +1,4 @@
 import 'package:go_router/go_router.dart';
-import 'package:tennis_court_app/features/reserve/presentation/screens/favorites_page.dart';
-import 'package:tennis_court_app/features/reserve/presentation/screens/reserves_page.dart';
 import 'package:tennis_court_app/features/reserve/reserve.dart';
 
 /// Home branch
@@ -16,12 +14,12 @@ final List<StatefulShellBranch> mainBranch = [
     ],
   ),
   StatefulShellBranch(
-    initialLocation: ReservesPage.path,
+    initialLocation: ReservationListPage.path,
     routes: <RouteBase>[
       GoRoute(
-        path: ReservesPage.path,
-        name: ReservesPage.name,
-        builder: (context, state) => const ReservesPage(),
+        path: ReservationListPage.path,
+        name: ReservationListPage.name,
+        builder: (context, state) => const ReservationListPage(),
       ),
     ],
   ),

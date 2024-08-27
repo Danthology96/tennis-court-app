@@ -90,26 +90,13 @@ class __RegisterPageStateBody extends State<_RegisterPageBody> {
             ),
 
             Positioned(
-              top: 24,
-              left: 30,
-              child: IconButton.filled(
-                onPressed: () {
-                  context.go(WelcomePage.path);
-                },
-                style: FilledButton.styleFrom(
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(15),
-                    ),
-                  ),
-                  backgroundColor: colorScheme.surfaceContainer,
-                ),
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: colorScheme.surface,
-                ),
-              ),
-            ),
+                top: 24,
+                left: 30,
+                child: BackArrow(
+                  onPressed: () {
+                    context.go(WelcomePage.path);
+                  },
+                )),
           ],
         ),
       ),
