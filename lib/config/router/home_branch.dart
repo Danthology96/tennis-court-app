@@ -11,7 +11,7 @@ final List<StatefulShellBranch> mainBranch = [
       GoRoute(
         path: HomePage.path,
         name: HomePage.name,
-        builder: (context, state) => const HomePage(),
+        builder: (context, state) => HomePage(),
       ),
     ],
   ),

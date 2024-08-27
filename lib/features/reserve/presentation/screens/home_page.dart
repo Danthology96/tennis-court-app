@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:tennis_court_app/features/shared/shared.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
 
   static const name = 'home';
   static const path = '/$name';
 
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
+    return Scaffold(
+      key: scaffoldKey,
+      appBar: const CustomAppBar(),
+      body: const Center(
         child: Text('Home Page'),
       ),
+      endDrawer: SideMenu(scaffoldKey: scaffoldKey),
     );
   }
 }
