@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CustomDropdownButton extends StatelessWidget {
-  const CustomDropdownButton({
+class HourSelector extends StatelessWidget {
+  const HourSelector({
     super.key,
     this.title,
     this.items,
@@ -22,11 +22,9 @@ class CustomDropdownButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final border = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(4),
-      borderSide: BorderSide(
-        color: colorScheme.onSurface,
-      ),
+    final border = UnderlineInputBorder(
+      borderRadius: BorderRadius.circular(6.0),
+      borderSide: BorderSide.none,
     );
 
     return DropdownButtonFormField(
@@ -34,17 +32,20 @@ class CustomDropdownButton extends StatelessWidget {
       padding: padding,
       isExpanded: true,
       dropdownColor: colorScheme.surface,
+      menuMaxHeight: 150,
       decoration: InputDecoration(
+        floatingLabelBehavior: FloatingLabelBehavior.always,
         contentPadding: contentPadding,
         isDense: true,
         enabledBorder: border,
         border: border,
         focusColor: colorScheme.onSurface,
         label: title != null ? Text(title!) : null,
+        labelStyle: textTheme.bodyMedium,
         fillColor: colorScheme.surface,
         focusedBorder: border.copyWith(
-          borderSide: BorderSide(
-            color: colorScheme.onSurface,
+          borderSide: const BorderSide(
+            color: Colors.transparent,
           ),
         ),
         filled: true,
@@ -55,6 +56,9 @@ class CustomDropdownButton extends StatelessWidget {
           : null,
       items: items,
       onChanged: onChanged,
+      style: textTheme.bodyMedium?.copyWith(
+        color: colorScheme.onSurfaceVariant,
+      ),
       icon:
           Icon(Icons.keyboard_arrow_down, color: colorScheme.onSurfaceVariant),
     );

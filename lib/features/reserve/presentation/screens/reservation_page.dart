@@ -14,6 +14,8 @@ class ReservationPage extends StatefulWidget {
 
 class _ReservationPageState extends State<ReservationPage> {
   int? dropdownValue;
+  int selectedHour = TimeOfDay.now().hour;
+  int selectedMinute = TimeOfDay.now().minute;
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -128,19 +130,101 @@ class _ReservationPageState extends State<ReservationPage> {
               color: colorScheme.surfaceContainerHighest,
               width: size.width,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 60),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    spacer,
                     Text(
                       "Establecer fecha y hora",
                       style: textTheme.titleMedium,
                     ),
                     spacer,
-                    DateSelectorTile(),
+                    const DateSelectorTile(),
+                    spacer,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: HourSelector(
+                            initialValue: 'Hora de inicio',
+                            title: 'Hora de inicio',
+                            contentPadding: const EdgeInsets.only(
+                                left: 20, right: 10, top: 10, bottom: 5),
+                            items: List<DropdownMenuItem<int>>.generate(
+                              24,
+                              (int index) {
+                                return DropdownMenuItem<int>(
+                                  value: index,
+                                  enabled: index != 0 ? true : false,
+                                  child: Text(
+                                    '$index:00',
+                                    style: textTheme.bodyMedium?.copyWith(
+                                        color: colorScheme.onSurfaceVariant,
+                                        decoration: index == 0
+                                            ? TextDecoration.lineThrough
+                                            : null),
+                                  ),
+                                );
+                              },
+                            ),
+                            onChanged: (value) {},
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: HourSelector(
+                            initialValue: 'Hora de fin',
+                            title: 'Hora de fin',
+                            contentPadding: const EdgeInsets.only(
+                                left: 20, right: 10, top: 10, bottom: 5),
+                            items: List<DropdownMenuItem<int>>.generate(
+                              24,
+                              (int index) {
+                                return DropdownMenuItem<int>(
+                                  value: index,
+                                  enabled: index != 0 ? true : false,
+                                  child: Text(
+                                    '$index:00',
+                                    style: textTheme.bodyMedium?.copyWith(
+                                        color: colorScheme.onSurfaceVariant,
+                                        decoration: index == 0
+                                            ? TextDecoration.lineThrough
+                                            : null),
+                                  ),
+                                );
+                              },
+                            ),
+                            onChanged: (value) {},
+                          ),
+                        ),
+                      ],
+                    ),
+                    spacer,
+                    Text(
+                      "Agregar un comentario",
+                      style: textTheme.titleMedium,
+                    ),
+                    spacer,
+                    TextField(
+                      maxLines: null,
+                      decoration: InputDecoration(
+                        hintText: 'Escribe un comentario',
+                        hintStyle: textTheme.bodyMedium,
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: BorderSide.none),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6),
+                            borderSide: BorderSide.none),
+                        filled: true,
+                        fillColor: colorScheme.surface,
+                      ),
+                    ),
                     spacer,
                     spacer,
+                    CustomFilledButton(
+                      onPressed: () {},
+                      text: 'Reservar',
+                    ),
                   ],
                 ),
               ),
