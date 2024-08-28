@@ -7,6 +7,7 @@ part 'reservation_state.dart';
 
 class ReservationCubit extends Cubit<ReservationState> {
   final Court court;
+  final WeatherRepository weatherRepository = OpenWeatherRepository();
   ReservationCubit({required this.court}) : super(const ReservationState()) {
     setCourtInfo(court);
   }
@@ -25,7 +26,7 @@ class ReservationCubit extends Cubit<ReservationState> {
       latLngLocation: court.latLngLocation,
       images: court.imagePaths,
       courtInstructors: court.instructors,
-      weather: court.weather,
+      currentWeather: court.weather,
     ));
   }
 
@@ -39,8 +40,9 @@ class ReservationCubit extends Cubit<ReservationState> {
     checkIsReservationValid();
   }
 
-  void setEndDate(DateTime endDate) {
+  Future<void> setEndDate(DateTime endDate) async {
     emit(state.copyWith(endDate: endDate));
+    await getWeather();
     checkIsReservationValid();
   }
 
@@ -53,10 +55,28 @@ class ReservationCubit extends Cubit<ReservationState> {
     emit(const ReservationState());
   }
 
+  void setWeather(Weather weather) {
+    emit(state.copyWith(currentWeather: weather));
+  }
+
   void checkIsReservationValid() {
     final isReservationValid = state.instructor != null &&
         state.startDate != null &&
         state.endDate != null;
     emit(state.copyWith(isReservationValid: isReservationValid));
+  }
+
+  Future<void> getWeather() async {
+    if (state.latLngLocation == null) return;
+    if (state.startDate == null) return;
+
+    final weather = await weatherRepository.getTimestampWeather(
+      lat: state.latLngLocation!.latitude!,
+      lng: state.latLngLocation!.longitude!,
+      timestamp: state.startDate!,
+    );
+    if (weather != null) {
+      setWeather(weather);
+    }
   }
 }

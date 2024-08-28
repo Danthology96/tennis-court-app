@@ -64,12 +64,7 @@ const ReservationSchema = CollectionSchema(
   embeddedSchemas: {
     r'Weather': WeatherSchema,
     r'Current': CurrentSchema,
-    r'WeatherElement': WeatherElementSchema,
-    r'Rain': RainSchema,
-    r'Minutely': MinutelySchema,
-    r'Daily': DailySchema,
-    r'Temp': TempSchema,
-    r'FeelsLike': FeelsLikeSchema
+    r'WeatherElement': WeatherElementSchema
   },
   getId: _reservationGetId,
   getLinks: _reservationGetLinks,
