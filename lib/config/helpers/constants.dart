@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tennis_court_app/config/helpers/enums.dart';
-import 'package:tennis_court_app/features/reserve/infrastructure/infrastructure.dart';
+import 'package:tennis_court_app/features/reserve/reserve.dart';
 
 const appPadding = EdgeInsets.symmetric(horizontal: 20, vertical: 10);
 const appPaddingHorizontal = EdgeInsets.symmetric(horizontal: 20);
@@ -91,3 +91,5 @@ List<Court> defaultCourts = [
     ],
   ),
 ];
+
+const iconsServerUrl = 'https://openweathermap.org/img/wn/';
