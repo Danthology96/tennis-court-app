@@ -15,7 +15,9 @@ class Court {
   final CourtType courtType;
   final double? pricePerHour;
   final LatLng? latLngLocation;
+  final String? address;
   final List<String>? instructors;
+  final List<String>? imagePaths;
   final List<int>? reservations;
   @ignore
   final Weather? weather;
@@ -25,8 +27,10 @@ class Court {
     this.id,
     this.name,
     this.courtType = CourtType.A,
+    this.imagePaths,
     this.pricePerHour,
     this.latLngLocation,
+    this.address,
     this.instructors,
     this.reservations,
     this.weather,
@@ -44,7 +48,9 @@ class Court {
       courtType: json["courtType"],
       pricePerHour: json["pricePerHour"],
       latLngLocation: json["latLngLocation"],
+      address: json["address"],
       instructors: json["instructors"],
+      imagePaths: json["imagePaths"],
       reservations: json["reservations"],
       weather: json["weather"],
     );
@@ -56,7 +62,9 @@ class Court {
         'courtType': courtType,
         'pricePerHour': pricePerHour,
         'latLngLocation': latLngLocation,
+        'address': address,
         'instructors': instructors,
+        'imagePaths': imagePaths,
         'reservations': reservations,
         'weather': weather,
       };
@@ -66,7 +74,9 @@ class Court {
     CourtType? courtType,
     double? pricePerHour,
     LatLng? latLngLocation,
+    String? address,
     List<String>? instructors,
+    List<String>? imagePaths,
     List<int>? reservations,
     Weather? weather,
   }) =>
@@ -76,7 +86,9 @@ class Court {
         courtType: courtType ?? this.courtType,
         pricePerHour: pricePerHour ?? this.pricePerHour,
         latLngLocation: latLngLocation ?? this.latLngLocation,
+        address: address ?? this.address,
         instructors: instructors ?? this.instructors,
+        imagePaths: imagePaths ?? this.imagePaths,
         reservations: reservations ?? this.reservations,
         weather: weather ?? this.weather,
       );

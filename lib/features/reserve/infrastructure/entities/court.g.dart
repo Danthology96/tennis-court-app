@@ -17,40 +17,50 @@ const CourtSchema = CollectionSchema(
   name: r'Court',
   id: 8071315023878232253,
   properties: {
-    r'courtType': PropertySchema(
+    r'address': PropertySchema(
       id: 0,
+      name: r'address',
+      type: IsarType.string,
+    ),
+    r'courtType': PropertySchema(
+      id: 1,
       name: r'courtType',
       type: IsarType.byte,
       enumMap: _CourtcourtTypeEnumValueMap,
     ),
     r'id': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'id',
       type: IsarType.string,
     ),
+    r'imagePaths': PropertySchema(
+      id: 3,
+      name: r'imagePaths',
+      type: IsarType.stringList,
+    ),
     r'instructors': PropertySchema(
-      id: 2,
+      id: 4,
       name: r'instructors',
       type: IsarType.stringList,
     ),
     r'latLngLocation': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'latLngLocation',
       type: IsarType.object,
       target: r'LatLng',
     ),
     r'name': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'name',
       type: IsarType.string,
     ),
     r'pricePerHour': PropertySchema(
-      id: 5,
+      id: 7,
       name: r'pricePerHour',
       type: IsarType.double,
     ),
     r'reservations': PropertySchema(
-      id: 6,
+      id: 8,
       name: r'reservations',
       type: IsarType.longList,
     )
@@ -76,9 +86,27 @@ int _courtEstimateSize(
 ) {
   var bytesCount = offsets.last;
   {
+    final value = object.address;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.id;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final list = object.imagePaths;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount += value.length * 3;
+        }
+      }
     }
   }
   {
@@ -121,18 +149,20 @@ void _courtSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeByte(offsets[0], object.courtType.index);
-  writer.writeString(offsets[1], object.id);
-  writer.writeStringList(offsets[2], object.instructors);
+  writer.writeString(offsets[0], object.address);
+  writer.writeByte(offsets[1], object.courtType.index);
+  writer.writeString(offsets[2], object.id);
+  writer.writeStringList(offsets[3], object.imagePaths);
+  writer.writeStringList(offsets[4], object.instructors);
   writer.writeObject<LatLng>(
-    offsets[3],
+    offsets[5],
     allOffsets,
     LatLngSchema.serialize,
     object.latLngLocation,
   );
-  writer.writeString(offsets[4], object.name);
-  writer.writeDouble(offsets[5], object.pricePerHour);
-  writer.writeLongList(offsets[6], object.reservations);
+  writer.writeString(offsets[6], object.name);
+  writer.writeDouble(offsets[7], object.pricePerHour);
+  writer.writeLongList(offsets[8], object.reservations);
 }
 
 Court _courtDeserialize(
@@ -142,19 +172,21 @@ Court _courtDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Court(
-    courtType: _CourtcourtTypeValueEnumMap[reader.readByteOrNull(offsets[0])] ??
+    address: reader.readStringOrNull(offsets[0]),
+    courtType: _CourtcourtTypeValueEnumMap[reader.readByteOrNull(offsets[1])] ??
         CourtType.A,
-    id: reader.readStringOrNull(offsets[1]),
-    instructors: reader.readStringList(offsets[2]),
+    id: reader.readStringOrNull(offsets[2]),
+    imagePaths: reader.readStringList(offsets[3]),
+    instructors: reader.readStringList(offsets[4]),
     isarId: id,
     latLngLocation: reader.readObjectOrNull<LatLng>(
-      offsets[3],
+      offsets[5],
       LatLngSchema.deserialize,
       allOffsets,
     ),
-    name: reader.readStringOrNull(offsets[4]),
-    pricePerHour: reader.readDoubleOrNull(offsets[5]),
-    reservations: reader.readLongList(offsets[6]),
+    name: reader.readStringOrNull(offsets[6]),
+    pricePerHour: reader.readDoubleOrNull(offsets[7]),
+    reservations: reader.readLongList(offsets[8]),
   );
   return object;
 }
@@ -167,23 +199,27 @@ P _courtDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readStringOrNull(offset)) as P;
+    case 1:
       return (_CourtcourtTypeValueEnumMap[reader.readByteOrNull(offset)] ??
           CourtType.A) as P;
-    case 1:
-      return (reader.readStringOrNull(offset)) as P;
     case 2:
-      return (reader.readStringList(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 3:
+      return (reader.readStringList(offset)) as P;
+    case 4:
+      return (reader.readStringList(offset)) as P;
+    case 5:
       return (reader.readObjectOrNull<LatLng>(
         offset,
         LatLngSchema.deserialize,
         allOffsets,
       )) as P;
-    case 4:
-      return (reader.readStringOrNull(offset)) as P;
-    case 5:
-      return (reader.readDoubleOrNull(offset)) as P;
     case 6:
+      return (reader.readStringOrNull(offset)) as P;
+    case 7:
+      return (reader.readDoubleOrNull(offset)) as P;
+    case 8:
       return (reader.readLongList(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -287,6 +323,152 @@ extension CourtQueryWhere on QueryBuilder<Court, Court, QWhereClause> {
 }
 
 extension CourtQueryFilter on QueryBuilder<Court, Court, QFilterCondition> {
+  QueryBuilder<Court, Court, QAfterFilterCondition> addressIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'address',
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> addressIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'address',
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> addressEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'address',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> addressGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'address',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> addressLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'address',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> addressBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'address',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> addressStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'address',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> addressEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'address',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> addressContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'address',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> addressMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'address',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> addressIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'address',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> addressIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'address',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<Court, Court, QAfterFilterCondition> courtTypeEqualTo(
       CourtType value) {
     return QueryBuilder.apply(this, (query) {
@@ -481,6 +663,238 @@ extension CourtQueryFilter on QueryBuilder<Court, Court, QFilterCondition> {
         property: r'id',
         value: '',
       ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> imagePathsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'imagePaths',
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> imagePathsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'imagePaths',
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> imagePathsElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'imagePaths',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition>
+      imagePathsElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'imagePaths',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> imagePathsElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'imagePaths',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> imagePathsElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'imagePaths',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> imagePathsElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'imagePaths',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> imagePathsElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'imagePaths',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> imagePathsElementContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'imagePaths',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> imagePathsElementMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'imagePaths',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> imagePathsElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'imagePaths',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition>
+      imagePathsElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'imagePaths',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> imagePathsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'imagePaths',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> imagePathsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'imagePaths',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> imagePathsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'imagePaths',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> imagePathsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'imagePaths',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> imagePathsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'imagePaths',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterFilterCondition> imagePathsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'imagePaths',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
     });
   }
 
@@ -1193,6 +1607,18 @@ extension CourtQueryObject on QueryBuilder<Court, Court, QFilterCondition> {
 extension CourtQueryLinks on QueryBuilder<Court, Court, QFilterCondition> {}
 
 extension CourtQuerySortBy on QueryBuilder<Court, Court, QSortBy> {
+  QueryBuilder<Court, Court, QAfterSortBy> sortByAddress() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'address', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterSortBy> sortByAddressDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'address', Sort.desc);
+    });
+  }
+
   QueryBuilder<Court, Court, QAfterSortBy> sortByCourtType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'courtType', Sort.asc);
@@ -1243,6 +1669,18 @@ extension CourtQuerySortBy on QueryBuilder<Court, Court, QSortBy> {
 }
 
 extension CourtQuerySortThenBy on QueryBuilder<Court, Court, QSortThenBy> {
+  QueryBuilder<Court, Court, QAfterSortBy> thenByAddress() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'address', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Court, Court, QAfterSortBy> thenByAddressDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'address', Sort.desc);
+    });
+  }
+
   QueryBuilder<Court, Court, QAfterSortBy> thenByCourtType() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'courtType', Sort.asc);
@@ -1305,6 +1743,13 @@ extension CourtQuerySortThenBy on QueryBuilder<Court, Court, QSortThenBy> {
 }
 
 extension CourtQueryWhereDistinct on QueryBuilder<Court, Court, QDistinct> {
+  QueryBuilder<Court, Court, QDistinct> distinctByAddress(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'address', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Court, Court, QDistinct> distinctByCourtType() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'courtType');
@@ -1315,6 +1760,12 @@ extension CourtQueryWhereDistinct on QueryBuilder<Court, Court, QDistinct> {
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'id', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Court, Court, QDistinct> distinctByImagePaths() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'imagePaths');
     });
   }
 
@@ -1351,6 +1802,12 @@ extension CourtQueryProperty on QueryBuilder<Court, Court, QQueryProperty> {
     });
   }
 
+  QueryBuilder<Court, String?, QQueryOperations> addressProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'address');
+    });
+  }
+
   QueryBuilder<Court, CourtType, QQueryOperations> courtTypeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'courtType');
@@ -1360,6 +1817,12 @@ extension CourtQueryProperty on QueryBuilder<Court, Court, QQueryProperty> {
   QueryBuilder<Court, String?, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Court, List<String>?, QQueryOperations> imagePathsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'imagePaths');
     });
   }
 

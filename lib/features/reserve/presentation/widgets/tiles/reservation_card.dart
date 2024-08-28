@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:tennis_court_app/features/reserve/reserve.dart';
 import 'package:tennis_court_app/features/shared/shared.dart';
 
 class ReservationCard extends StatelessWidget {
-  const ReservationCard({super.key});
+  const ReservationCard({super.key, required this.court});
+
+  final Court court;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +29,7 @@ class ReservationCard extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.asset(
-                'assets/images/tennis-court-1.jpg',
+                court.imagePaths?[0] ?? 'assets/images/no-image.png',
                 height: 130,
                 fit: BoxFit.fill,
               ),
@@ -46,7 +49,7 @@ class ReservationCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        'Cancha de tenis',
+                        court.name ?? 'Cancha de tenis',
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: textTheme.titleMedium?.copyWith(
@@ -60,7 +63,8 @@ class ReservationCard extends StatelessWidget {
                     const ClimateWidget(),
                   ],
                 ),
-                Text('Cancha tipo A', style: captionTheme),
+                Text("Cancha tipo ${court.courtType.name}",
+                    style: captionTheme),
                 spacer,
                 Row(
                   children: [
@@ -70,7 +74,9 @@ class ReservationCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 5),
                     Text(
-                      '9 de julio 2024',
+                      DateFormat("dd MMMM yyyy", "es").format(
+                        DateTime.now(),
+                      ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: captionTheme,
@@ -78,14 +84,18 @@ class ReservationCard extends StatelessWidget {
                   ],
                 ),
                 spacer,
-                const CourtAvailability(),
+                CourtAvailability(
+                  isAvailable: true,
+                  availableStartDate: DateTime.now(),
+                  availableEndDate: DateTime.now().copyWith(hour: 22),
+                ),
                 spacer,
                 spacer,
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: CustomFilledButton(
                     onPressed: () {
-                      context.pushNamed(ReservationPage.name);
+                      context.pushNamed(ReservationPage.name, extra: court);
                     },
                     height: 32,
                     text: 'Reservar',
