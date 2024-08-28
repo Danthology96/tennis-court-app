@@ -14,7 +14,10 @@ class CourtsHorizontalListView extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       child: Row(
         children: defaultCourts.map((court) {
-          return ReservationCard(court: court);
+          return Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: ReservationCard(court: court),
+          );
         }).toList(),
       ),
     );

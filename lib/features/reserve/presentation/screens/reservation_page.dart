@@ -218,8 +218,9 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
                             items: generateEndHours(
                                 reservationCubit, textTheme, colorScheme),
                             onChanged: (value) {
-                              if (reservationCubit.state.startDate == null ||
-                                  reservationCubit.state.endDate == null) {
+                              DateTime? endDate =
+                                  reservationCubit.state.startDate;
+                              if (reservationCubit.state.startDate == null) {
                                 reservationCubit.setStartDate(DateTime.now());
                               }
                               if (reservationCubit.state.startDate!.hour >
@@ -232,9 +233,9 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
                                 return;
                               }
                               setState(() {
-                                reservationCubit.setEndDate(reservationCubit
-                                    .state.endDate!
-                                    .copyWith(hour: value));
+                                endDate = reservationCubit.state.startDate;
+                                reservationCubit
+                                    .setEndDate(endDate!.copyWith(hour: value));
                               });
                             },
                           ),
@@ -286,7 +287,9 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
       TextTheme textTheme,
       ColorScheme colorScheme) {
     List<DropdownMenuItem<int>> list = <DropdownMenuItem<int>>[];
-    for (var i = reservationCubit.state.startDate?.hour ?? 0; i < 24; i++) {
+    for (var i = (reservationCubit.state.startDate?.hour ?? 0) + 1;
+        i < 24;
+        i++) {
       list.add(DropdownMenuItem<int>(
         value: i,
         enabled:

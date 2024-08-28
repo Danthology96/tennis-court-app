@@ -40,9 +40,9 @@ class ReservationCubit extends Cubit<ReservationState> {
     checkIsReservationValid();
   }
 
-  void setEndDate(DateTime endDate) {
+  Future<void> setEndDate(DateTime endDate) async {
     emit(state.copyWith(endDate: endDate));
-    getWeather();
+    await getWeather();
     checkIsReservationValid();
   }
 
@@ -66,7 +66,7 @@ class ReservationCubit extends Cubit<ReservationState> {
     emit(state.copyWith(isReservationValid: isReservationValid));
   }
 
-  void getWeather() async {
+  Future<void> getWeather() async {
     if (state.latLngLocation == null) return;
     if (state.startDate == null) return;
 
