@@ -20,4 +20,5 @@ final appColorScheme = ColorScheme.fromSeed(
   onSurfaceVariant: AppColors.grayTextColor,
   surfaceContainer: AppColors.containerColor,
   surfaceContainerHighest: AppColors.backgroundGrayColor,
+  onPrimaryFixedVariant: AppColors.grayColorAccent,
 );

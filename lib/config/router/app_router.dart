@@ -82,6 +82,14 @@ class AppRouter {
         ),
       ),
 
+      /// Reservation Page
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: ReservationPage.path,
+        name: ReservationPage.name,
+        builder: (context, state) => const ReservationPage(),
+      ),
+
       /// StatefullShellRoute used to preserve the state of the routes included
       /// in the bottomnavigationbar tabs, each tab will have it's own routes
       StatefulShellRoute.indexedStack(

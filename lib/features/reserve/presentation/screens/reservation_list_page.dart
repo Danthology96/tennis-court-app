@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class ReservesPage extends StatelessWidget {
-  const ReservesPage({super.key});
+class ReservationListPage extends StatelessWidget {
+  const ReservationListPage({super.key});
 
-  static const name = 'reserves';
+  static const name = 'reservation-list';
   static const path = '/$name';
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text('Reserves Page'),
+        child: Text('Reservation List Page'),
       ),
     );
   }
