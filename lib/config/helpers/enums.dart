@@ -32,3 +32,9 @@ enum AlertType {
   info,
   modal,
 }
+
+enum CourtType {
+  A,
+  B,
+  C,
+}

@@ -16,6 +16,9 @@ flutter pub run build_runner build
 
 # Functionallity:
 
+The app uses an API KEY, the API_KEY will be provided, needs to copy the env_template, and rename it
+to ".env"
+
 The app uses local database (Isar technology), so, in order to make this app work, user needs to:
 1. Register a user.
 2. Login with the user credentials.
