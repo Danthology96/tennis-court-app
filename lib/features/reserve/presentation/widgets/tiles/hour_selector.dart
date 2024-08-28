@@ -10,6 +10,7 @@ class HourSelector extends StatelessWidget {
     this.padding,
     this.value,
     this.contentPadding,
+    this.enabled,
   });
   final String? title;
   final String? initialValue;
@@ -18,6 +19,7 @@ class HourSelector extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? contentPadding;
   final dynamic value;
+  final bool? enabled;
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -34,6 +36,7 @@ class HourSelector extends StatelessWidget {
       dropdownColor: colorScheme.surface,
       menuMaxHeight: 150,
       decoration: InputDecoration(
+        enabled: enabled ?? true,
         floatingLabelBehavior: FloatingLabelBehavior.always,
         contentPadding: contentPadding,
         isDense: true,

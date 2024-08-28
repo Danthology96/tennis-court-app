@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:tennis_court_app/features/shared/presentation/presentation.dart';
 
 class ReservationAppbar extends StatelessWidget {
-  const ReservationAppbar({super.key});
+  const ReservationAppbar({super.key, this.images});
+
+  final List<String>? images;
 
   @override
   Widget build(BuildContext context) {
@@ -35,37 +37,40 @@ class ReservationAppbar extends StatelessWidget {
             onPressed: () {},
           ),
         ],
-        flexibleSpace: FlexibleSpaceBar(
-          titlePadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          background: Stack(
-            children: [
-              Swiper(
-                viewportFraction: 1,
-                scale: 0.9,
-                autoplay: true,
-                itemCount: 3,
-                pagination: SwiperPagination(
-                    alignment: Alignment.bottomCenter,
-                    builder: DotSwiperPaginationBuilder(
-                      color: colorScheme.surface.withOpacity(0.6),
-                      activeColor: colorScheme.secondary,
-                    )),
-                itemBuilder: (context, index) {
-                  return FadeInImage(
-                    placeholder: const AssetImage(
-                      "assets/images/no-image.png",
+        flexibleSpace: (images == null)
+            ? null
+            : FlexibleSpaceBar(
+                titlePadding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                background: Stack(
+                  children: [
+                    Swiper(
+                      viewportFraction: 1,
+                      scale: 0.9,
+                      autoplay: true,
+                      itemCount: images?.length ?? 0,
+                      pagination: SwiperPagination(
+                          alignment: Alignment.bottomCenter,
+                          builder: DotSwiperPaginationBuilder(
+                            color: colorScheme.surface.withOpacity(0.6),
+                            activeColor: colorScheme.secondary,
+                          )),
+                      itemBuilder: (context, index) {
+                        return FadeInImage(
+                          placeholder: const AssetImage(
+                            "assets/images/no-image.png",
+                          ),
+                          placeholderFit: BoxFit.cover,
+                          image: AssetImage(
+                            images![index],
+                          ),
+                          fit: BoxFit.cover,
+                        );
+                      },
+                      fade: 0.1,
                     ),
-                    placeholderFit: BoxFit.cover,
-                    image: AssetImage(
-                      "assets/images/tennis-court-${index + 1}.jpg",
-                    ),
-                    fit: BoxFit.cover,
-                  );
-                },
-                fade: 0.1,
-              ),
-            ],
-          ),
-        ));
+                  ],
+                ),
+              ));
   }
 }

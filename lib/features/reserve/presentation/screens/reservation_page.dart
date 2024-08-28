@@ -1,32 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:tennis_court_app/features/reserve/reserve.dart';
 import 'package:tennis_court_app/features/shared/shared.dart';
 
-class ReservationPage extends StatefulWidget {
-  const ReservationPage({super.key});
+class ReservationPage extends StatelessWidget {
+  const ReservationPage({super.key, required this.court});
 
   static const name = 'reservation';
   static const path = '/$name';
 
+  final Court court;
+
   @override
-  State<ReservationPage> createState() => _ReservationPageState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => ReservationCubit(court: court),
+      child: const _ReservationPageBody(),
+    );
+  }
 }
 
-class _ReservationPageState extends State<ReservationPage> {
-  int? dropdownValue;
-  int selectedHour = TimeOfDay.now().hour;
-  int selectedMinute = TimeOfDay.now().minute;
+class _ReservationPageBody extends StatefulWidget {
+  const _ReservationPageBody();
+
+  @override
+  State<_ReservationPageBody> createState() => __ReservationPageBodyState();
+}
+
+class __ReservationPageBodyState extends State<_ReservationPageBody> {
+  String? dropdownValue;
+  DateTime? startHour;
+  DateTime? endHour;
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
     const spacer = SizedBox(height: 20);
     final size = MediaQuery.of(context).size;
+    final reservationCubit = context.watch<ReservationCubit>();
 
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          const ReservationAppbar(),
+          ReservationAppbar(images: reservationCubit.state.images),
           SliverList(
               delegate: SliverChildListDelegate([
             Padding(
@@ -39,13 +56,13 @@ class _ReservationPageState extends State<ReservationPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Reservas',
+                        reservationCubit.state.courtName ?? '',
                         style: textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       Text(
-                        "\$25",
+                        '\$${reservationCubit.state.pricePerHour ?? 0.0}',
                         style: textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: colorScheme.tertiary),
@@ -55,28 +72,43 @@ class _ReservationPageState extends State<ReservationPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Cancha tipo A', style: textTheme.bodySmall),
-                      Text("Por hora",
-                          style: textTheme.labelSmall
-                              ?.copyWith(color: colorScheme.onSurfaceVariant)),
-                    ],
-                  ),
-                  spacer,
-                  const Row(
-                    children: [
-                      Expanded(child: CourtAvailability()),
-                      ClimateWidget(),
+                      Text(
+                          'Cancha tipo ${reservationCubit.state.courtType?.name}',
+                          style: textTheme.bodySmall),
+                      Text(
+                        "Por hora",
+                        style: textTheme.labelSmall
+                            ?.copyWith(color: colorScheme.onSurfaceVariant),
+                      ),
                     ],
                   ),
                   spacer,
                   Row(
                     children: [
-                      const Icon(Icons.location_on_outlined),
-                      const SizedBox(width: 5),
-                      Text('Vía Av. Caracas y Av. P. Caroni',
-                          style: textTheme.bodySmall),
+                      Expanded(
+                        child: CourtAvailability(
+                          isAvailable: true,
+                          availableStartDate: DateTime.now(),
+                          availableEndDate: DateTime.now().add(const Duration(
+                            hours: 5,
+                          )),
+                        ),
+                      ),
+                      ClimateWidget(
+                        weather: reservationCubit.state.weather,
+                      ),
                     ],
                   ),
+                  spacer,
+                  if (reservationCubit.state.adress != null)
+                    Row(
+                      children: [
+                        const Icon(Icons.location_on_outlined),
+                        const SizedBox(width: 5),
+                        Text(reservationCubit.state.adress!,
+                            style: textTheme.bodySmall),
+                      ],
+                    ),
                   spacer,
                   Row(
                     children: [
@@ -87,34 +119,16 @@ class _ReservationPageState extends State<ReservationPage> {
                           contentPadding: const EdgeInsets.all(6),
                           value: dropdownValue,
                           initialValue: 'Agregar instructor',
-                          items: [
-                            DropdownMenuItem(
-                              value: 1,
-                              child: Text(
-                                'Rafael Nadal',
-                                style: textTheme.bodyLarge,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            DropdownMenuItem(
-                              value: 2,
-                              child: Text(
-                                'Djokovic',
-                                style: textTheme.bodyLarge,
-                              ),
-                            ),
-                            DropdownMenuItem(
-                              value: 3,
-                              child: Text(
-                                'Roger Federer',
-                                style: textTheme.bodyLarge,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
+                          items: reservationCubit.state.courtInstructors
+                              ?.map((e) => DropdownMenuItem(
+                                    value: e,
+                                    child: Text(e),
+                                  ))
+                              .toList(),
                           onChanged: (value) {
                             setState(() {
                               dropdownValue = value;
+                              reservationCubit.setInstructor(value as String);
                             });
                           },
                         ),
@@ -139,12 +153,27 @@ class _ReservationPageState extends State<ReservationPage> {
                       style: textTheme.titleMedium,
                     ),
                     spacer,
-                    const DateSelectorTile(),
+                    DateSelectorTile(
+                      title: reservationCubit.state.startDate != null
+                          ? DateFormat("dd/MM/yyyy")
+                              .format(reservationCubit.state.startDate!)
+                          : 'Seleccionar fecha',
+                      onSelectionChanged: (value) {
+                        reservationCubit.setStartDate(value.value as DateTime);
+                      },
+                      onCancel: () {
+                        reservationCubit.setStartDate(DateTime.now());
+                      },
+                      onSubmit: (value) {
+                        reservationCubit.setStartDate(value as DateTime);
+                      },
+                    ),
                     spacer,
                     Row(
                       children: [
                         Expanded(
                           child: HourSelector(
+                            value: reservationCubit.state.startDate?.hour,
                             initialValue: 'Hora de inicio',
                             title: 'Hora de inicio',
                             contentPadding: const EdgeInsets.only(
@@ -166,7 +195,18 @@ class _ReservationPageState extends State<ReservationPage> {
                                 );
                               },
                             ),
-                            onChanged: (value) {},
+                            onChanged: (value) {
+                              if (reservationCubit.state.startDate == null ||
+                                  reservationCubit.state.endDate == null) {
+                                reservationCubit.setStartDate(DateTime.now());
+                                reservationCubit.setEndDate(DateTime.now());
+                              }
+                              setState(() {
+                                reservationCubit.setStartDate(reservationCubit
+                                    .state.startDate!
+                                    .copyWith(hour: value));
+                              });
+                            },
                           ),
                         ),
                         const SizedBox(width: 20),
@@ -174,6 +214,7 @@ class _ReservationPageState extends State<ReservationPage> {
                           child: HourSelector(
                             initialValue: 'Hora de fin',
                             title: 'Hora de fin',
+                            value: reservationCubit.state.endDate?.hour,
                             contentPadding: const EdgeInsets.only(
                                 left: 20, right: 10, top: 10, bottom: 5),
                             items: List<DropdownMenuItem<int>>.generate(
@@ -181,19 +222,43 @@ class _ReservationPageState extends State<ReservationPage> {
                               (int index) {
                                 return DropdownMenuItem<int>(
                                   value: index,
-                                  enabled: index != 0 ? true : false,
+                                  enabled: index >
+                                          reservationCubit.state.startDate!.hour
+                                      ? true
+                                      : false,
                                   child: Text(
                                     '$index:00',
                                     style: textTheme.bodyMedium?.copyWith(
                                         color: colorScheme.onSurfaceVariant,
-                                        decoration: index == 0
+                                        decoration: index <=
+                                                reservationCubit
+                                                    .state.startDate!.hour
                                             ? TextDecoration.lineThrough
                                             : null),
                                   ),
                                 );
                               },
                             ),
-                            onChanged: (value) {},
+                            onChanged: (value) {
+                              if (reservationCubit.state.startDate == null ||
+                                  reservationCubit.state.endDate == null) {
+                                reservationCubit.setStartDate(DateTime.now());
+                              }
+                              if (reservationCubit.state.startDate!.hour >
+                                  value) {
+                                reservationCubit.setEndDate(
+                                    reservationCubit.state.startDate!.copyWith(
+                                        hour: reservationCubit
+                                                .state.startDate!.hour +
+                                            1));
+                                return;
+                              }
+                              setState(() {
+                                reservationCubit.setEndDate(reservationCubit
+                                    .state.endDate!
+                                    .copyWith(hour: value));
+                              });
+                            },
                           ),
                         ),
                       ],
@@ -222,7 +287,10 @@ class _ReservationPageState extends State<ReservationPage> {
                     spacer,
                     spacer,
                     CustomFilledButton(
-                      onPressed: () {},
+                      onPressed:
+                          reservationCubit.state.isReservationValid == true
+                              ? () {}
+                              : null,
                       text: 'Reservar',
                     ),
                   ],

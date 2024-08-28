@@ -87,7 +87,9 @@ class AppRouter {
         parentNavigatorKey: _rootNavigatorKey,
         path: ReservationPage.path,
         name: ReservationPage.name,
-        builder: (context, state) => const ReservationPage(),
+        builder: (context, state) => ReservationPage(
+          court: state.extra as Court,
+        ),
       ),
 
       /// StatefullShellRoute used to preserve the state of the routes included

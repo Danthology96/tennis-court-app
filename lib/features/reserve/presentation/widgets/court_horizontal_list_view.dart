@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tennis_court_app/config/config.dart';
 import 'package:tennis_court_app/features/reserve/presentation/presentation.dart';
 
 class CourtsHorizontalListView extends StatelessWidget {
@@ -8,21 +9,13 @@ class CourtsHorizontalListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SingleChildScrollView(
+    return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       child: Row(
-        children: [
-          ReservationCard(),
-          SizedBox(
-            width: 20,
-          ),
-          ReservationCard(),
-          SizedBox(
-            width: 20,
-          ),
-          ReservationCard(),
-        ],
+        children: defaultCourts.map((court) {
+          return ReservationCard(court: court);
+        }).toList(),
       ),
     );
   }

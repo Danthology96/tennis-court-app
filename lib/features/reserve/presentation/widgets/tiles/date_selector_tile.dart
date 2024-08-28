@@ -8,11 +8,13 @@ class DateSelectorTile extends StatefulWidget {
     this.onSelectionChanged,
     this.onCancel,
     this.onSubmit,
+    this.title,
   });
 
   final void Function(DateRangePickerSelectionChangedArgs)? onSelectionChanged;
   final void Function()? onCancel;
   final void Function(dynamic)? onSubmit;
+  final String? title;
 
   @override
   State<DateSelectorTile> createState() => _DateSelectorTileState();
@@ -43,7 +45,7 @@ class _DateSelectorTileState extends State<DateSelectorTile> {
         collapsedShape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        title: const Text('Seleccionar fecha'),
+        title: Text(widget.title ?? 'seleccionar fecha'),
         children: [
           CalendarWidget(
             onSelectionChanged: widget.onSelectionChanged,
