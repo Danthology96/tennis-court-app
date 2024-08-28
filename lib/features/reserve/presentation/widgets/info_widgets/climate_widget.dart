@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tennis_court_app/config/config.dart';
@@ -20,15 +21,19 @@ class ClimateWidget extends StatelessWidget {
         Row(
           children: [
             if (currentWeather != null)
-              FadeInImage(
-                width: 24,
-                height: 24,
-                placeholder: const AssetImage("assets/images/no-image.png"),
-                fit: BoxFit.cover,
-                image: NetworkImage(
-                  "$iconsServerUrl/${currentWeather.icon}@2x.png",
-                ),
+              Image.network(
+                "$iconsServerUrl/${currentWeather.icon}@2x.png",
                 color: colorScheme.tertiary,
+                width: 24,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) {
+                    return FadeIn(child: child);
+                  }
+                  return const Center(
+                    child: CircularProgressIndicator(strokeWidth: 1),
+                  );
+                },
               )
             else
               SvgPicture.asset(
