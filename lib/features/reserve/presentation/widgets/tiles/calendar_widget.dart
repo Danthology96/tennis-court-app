@@ -4,8 +4,13 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 class CalendarWidget extends StatelessWidget {
   const CalendarWidget({
     super.key,
+    this.onSelectionChanged,
+    this.onCancel,
+    this.onSubmit,
   });
-
+  final void Function(DateRangePickerSelectionChangedArgs)? onSelectionChanged;
+  final void Function()? onCancel;
+  final void Function(dynamic)? onSubmit;
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -70,7 +75,9 @@ class CalendarWidget extends StatelessWidget {
           ),
         ),
 
-        onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {},
+        onSelectionChanged: onSelectionChanged,
+        onCancel: onCancel,
+        onSubmit: onSubmit,
         monthViewSettings: DateRangePickerMonthViewSettings(
           dayFormat: "E",
           viewHeaderHeight: 30,

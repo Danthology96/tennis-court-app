@@ -89,7 +89,7 @@ class _ReservationPageState extends State<ReservationPage> {
                             DropdownMenuItem(
                               value: 1,
                               child: Text(
-                                'Rafael Nadal awd awd awda wd aw',
+                                'Rafael Nadal',
                                 style: textTheme.bodyLarge,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -138,22 +138,7 @@ class _ReservationPageState extends State<ReservationPage> {
                       style: textTheme.titleMedium,
                     ),
                     spacer,
-                    ExpansionTile(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      collapsedBackgroundColor: colorScheme.surface,
-                      backgroundColor: colorScheme.surface,
-                      collapsedIconColor: colorScheme.onSurfaceVariant,
-                      iconColor: colorScheme.onSurfaceVariant,
-                      collapsedShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      title: const Text('Seleccionar fecha'),
-                      children: const [
-                        CalendarWidget(),
-                      ],
-                    ),
+                    DateSelectorTile(),
                     spacer,
                     spacer,
                   ],
