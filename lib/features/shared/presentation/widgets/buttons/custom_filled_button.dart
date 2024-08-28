@@ -29,6 +29,8 @@ class CustomFilledButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
+        disabledBackgroundColor: color?.withOpacity(0.3) ??
+            colorScheme.surfaceContainer.withOpacity(0.3),
       ),
       child: Text(
         text ?? '',

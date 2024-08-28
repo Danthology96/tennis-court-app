@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:tennis_court_app/features/reserve/reserve.dart';
 import 'package:tennis_court_app/features/shared/shared.dart';
 
@@ -28,9 +29,9 @@ class _ReservationPageBody extends StatefulWidget {
 }
 
 class __ReservationPageBodyState extends State<_ReservationPageBody> {
-  int? dropdownValue;
-  int selectedHour = TimeOfDay.now().hour;
-  int selectedMinute = TimeOfDay.now().minute;
+  String? dropdownValue;
+  DateTime? startHour;
+  DateTime? endHour;
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -127,6 +128,7 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
                           onChanged: (value) {
                             setState(() {
                               dropdownValue = value;
+                              reservationCubit.setInstructor(value as String);
                             });
                           },
                         ),
@@ -152,6 +154,10 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
                     ),
                     spacer,
                     DateSelectorTile(
+                      title: reservationCubit.state.startDate != null
+                          ? DateFormat("dd/MM/yyyy")
+                              .format(reservationCubit.state.startDate!)
+                          : 'Seleccionar fecha',
                       onSelectionChanged: (value) {
                         reservationCubit.setStartDate(value.value as DateTime);
                       },
@@ -167,6 +173,7 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
                       children: [
                         Expanded(
                           child: HourSelector(
+                            value: reservationCubit.state.startDate?.hour,
                             initialValue: 'Hora de inicio',
                             title: 'Hora de inicio',
                             contentPadding: const EdgeInsets.only(
@@ -207,6 +214,7 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
                           child: HourSelector(
                             initialValue: 'Hora de fin',
                             title: 'Hora de fin',
+                            value: reservationCubit.state.endDate?.hour,
                             contentPadding: const EdgeInsets.only(
                                 left: 20, right: 10, top: 10, bottom: 5),
                             items: List<DropdownMenuItem<int>>.generate(
@@ -214,12 +222,17 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
                               (int index) {
                                 return DropdownMenuItem<int>(
                                   value: index,
-                                  enabled: index != 0 ? true : false,
+                                  enabled: index >
+                                          reservationCubit.state.startDate!.hour
+                                      ? true
+                                      : false,
                                   child: Text(
                                     '$index:00',
                                     style: textTheme.bodyMedium?.copyWith(
                                         color: colorScheme.onSurfaceVariant,
-                                        decoration: index == 0
+                                        decoration: index <=
+                                                reservationCubit
+                                                    .state.startDate!.hour
                                             ? TextDecoration.lineThrough
                                             : null),
                                   ),
@@ -230,10 +243,14 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
                               if (reservationCubit.state.startDate == null ||
                                   reservationCubit.state.endDate == null) {
                                 reservationCubit.setStartDate(DateTime.now());
-                                reservationCubit.setEndDate(DateTime.now());
                               }
                               if (reservationCubit.state.startDate!.hour >
                                   value) {
+                                reservationCubit.setEndDate(
+                                    reservationCubit.state.startDate!.copyWith(
+                                        hour: reservationCubit
+                                                .state.startDate!.hour +
+                                            1));
                                 return;
                               }
                               setState(() {
@@ -270,7 +287,10 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
                     spacer,
                     spacer,
                     CustomFilledButton(
-                      onPressed: () {},
+                      onPressed:
+                          reservationCubit.state.isReservationValid == true
+                              ? () {}
+                              : null,
                       text: 'Reservar',
                     ),
                   ],

@@ -31,21 +31,32 @@ class ReservationCubit extends Cubit<ReservationState> {
 
   void setInstructor(String instructor) {
     emit(state.copyWith(instructor: instructor));
+    checkIsReservationValid();
   }
 
   void setStartDate(DateTime startDate) {
     emit(state.copyWith(startDate: startDate));
+    checkIsReservationValid();
   }
 
   void setEndDate(DateTime endDate) {
     emit(state.copyWith(endDate: endDate));
+    checkIsReservationValid();
   }
 
   void setCommentary(String commentary) {
     emit(state.copyWith(commentary: commentary));
+    checkIsReservationValid();
   }
 
   void clearReservation() {
     emit(const ReservationState());
+  }
+
+  void checkIsReservationValid() {
+    final isReservationValid = state.instructor != null &&
+        state.startDate != null &&
+        state.endDate != null;
+    emit(state.copyWith(isReservationValid: isReservationValid));
   }
 }

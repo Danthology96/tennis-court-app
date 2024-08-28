@@ -16,6 +16,9 @@ class ReservationState extends Equatable {
   final List<String>? images;
   final List<String>? courtInstructors;
 
+  /// to check if the reservation is valid
+  final bool? isReservationValid;
+
   const ReservationState({
     this.reservation,
     this.courtId,
@@ -31,6 +34,7 @@ class ReservationState extends Equatable {
     this.commentary,
     this.images,
     this.courtInstructors,
+    this.isReservationValid,
   });
 
   ReservationState copyWith({
@@ -48,22 +52,25 @@ class ReservationState extends Equatable {
     DateTime? endDate,
     String? commentary,
     List<String>? courtInstructors,
+    bool? isReservationValid = false,
   }) =>
       ReservationState(
-          reservation: reservation ?? this.reservation,
-          courtId: courtId ?? this.courtId,
-          courtName: courtName ?? this.courtName,
-          courtType: courtType ?? this.courtType,
-          pricePerHour: pricePerHour ?? this.pricePerHour,
-          weather: weather ?? this.weather,
-          adress: adress ?? this.adress,
-          latLngLocation: latLngLocation ?? this.latLngLocation,
-          instructor: instructor ?? this.instructor,
-          images: images ?? this.images,
-          startDate: startDate ?? this.startDate,
-          endDate: endDate ?? this.endDate,
-          commentary: commentary ?? this.commentary,
-          courtInstructors: courtInstructors ?? this.courtInstructors);
+        reservation: reservation ?? this.reservation,
+        courtId: courtId ?? this.courtId,
+        courtName: courtName ?? this.courtName,
+        courtType: courtType ?? this.courtType,
+        pricePerHour: pricePerHour ?? this.pricePerHour,
+        weather: weather ?? this.weather,
+        adress: adress ?? this.adress,
+        latLngLocation: latLngLocation ?? this.latLngLocation,
+        instructor: instructor ?? this.instructor,
+        images: images ?? this.images,
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+        commentary: commentary ?? this.commentary,
+        courtInstructors: courtInstructors ?? this.courtInstructors,
+        isReservationValid: isReservationValid ?? this.isReservationValid,
+      );
 
   @override
   List<Object?> get props => [
@@ -81,5 +88,6 @@ class ReservationState extends Equatable {
         endDate,
         commentary,
         courtInstructors,
+        isReservationValid,
       ];
 }
