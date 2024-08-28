@@ -45,4 +45,24 @@ class Reservation {
       'commentary': commentary,
     };
   }
+
+  Reservation copyWith({
+    String? id,
+    String? userId,
+    String? courtId,
+    DateTime? startDate,
+    DateTime? endDate,
+    String? commentary,
+    Weather? weather,
+  }) {
+    return Reservation(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      courtId: courtId ?? this.courtId,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      commentary: commentary ?? this.commentary,
+      weather: weather ?? this.weather,
+    );
+  }
 }

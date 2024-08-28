@@ -9,7 +9,7 @@ class OpenWeatherRepository extends WeatherRepository {
   @override
   Future<Weather?> getDayWeather(
       {required double lat, required double lng}) async {
-    return dataSource!.getDayWeather(lat: lat, lng: lng);
+    return await dataSource!.getDayWeather(lat: lat, lng: lng);
   }
 
   @override
@@ -17,7 +17,7 @@ class OpenWeatherRepository extends WeatherRepository {
       {required double lat,
       required double lng,
       required DateTime timestamp}) async {
-    return dataSource!
+    return await dataSource!
         .getTimestampWeather(lat: lat, lng: lng, timestamp: timestamp);
   }
 }

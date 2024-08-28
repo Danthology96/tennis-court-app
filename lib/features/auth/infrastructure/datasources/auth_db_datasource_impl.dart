@@ -43,7 +43,7 @@ class AuthDBDataSourceImpl implements AuthDataSource {
       /// to simulate a loading time
       await closeLoadingScreen();
       customToastAlerts(
-          type: AlertType.success, message: 'Usuario registrado correctamente');
+          type: AlertType.success, message: 'Usuario no registrado');
       return false;
     } else {
       final random = Random();
