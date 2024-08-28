@@ -95,7 +95,7 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
                         ),
                       ),
                       ClimateWidget(
-                        weather: reservationCubit.state.weather,
+                        weather: reservationCubit.state.currentWeather,
                       ),
                     ],
                   ),
@@ -183,7 +183,7 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
                               (int index) {
                                 return DropdownMenuItem<int>(
                                   value: index,
-                                  enabled: index != 0 ? true : false,
+                                  enabled: index != 20 ? true : false,
                                   child: Text(
                                     '$index:00',
                                     style: textTheme.bodyMedium?.copyWith(
@@ -196,10 +196,8 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
                               },
                             ),
                             onChanged: (value) {
-                              if (reservationCubit.state.startDate == null ||
-                                  reservationCubit.state.endDate == null) {
+                              if (reservationCubit.state.startDate == null) {
                                 reservationCubit.setStartDate(DateTime.now());
-                                reservationCubit.setEndDate(DateTime.now());
                               }
                               setState(() {
                                 reservationCubit.setStartDate(reservationCubit
@@ -217,28 +215,8 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
                             value: reservationCubit.state.endDate?.hour,
                             contentPadding: const EdgeInsets.only(
                                 left: 20, right: 10, top: 10, bottom: 5),
-                            items: List<DropdownMenuItem<int>>.generate(
-                              24,
-                              (int index) {
-                                return DropdownMenuItem<int>(
-                                  value: index,
-                                  enabled: index >
-                                          reservationCubit.state.startDate!.hour
-                                      ? true
-                                      : false,
-                                  child: Text(
-                                    '$index:00',
-                                    style: textTheme.bodyMedium?.copyWith(
-                                        color: colorScheme.onSurfaceVariant,
-                                        decoration: index <=
-                                                reservationCubit
-                                                    .state.startDate!.hour
-                                            ? TextDecoration.lineThrough
-                                            : null),
-                                  ),
-                                );
-                              },
-                            ),
+                            items: generateEndHours(
+                                reservationCubit, textTheme, colorScheme),
                             onChanged: (value) {
                               if (reservationCubit.state.startDate == null ||
                                   reservationCubit.state.endDate == null) {
@@ -301,5 +279,28 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
         ],
       ),
     );
+  }
+
+  List<DropdownMenuItem<int>> generateEndHours(
+      ReservationCubit reservationCubit,
+      TextTheme textTheme,
+      ColorScheme colorScheme) {
+    List<DropdownMenuItem<int>> list = <DropdownMenuItem<int>>[];
+    for (var i = reservationCubit.state.startDate?.hour ?? 0; i < 24; i++) {
+      list.add(DropdownMenuItem<int>(
+        value: i,
+        enabled:
+            i > (reservationCubit.state.startDate?.hour ?? 0) ? true : false,
+        child: Text(
+          '$i:00',
+          style: textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+              decoration: i <= (reservationCubit.state.startDate?.hour ?? 0)
+                  ? TextDecoration.lineThrough
+                  : null),
+        ),
+      ));
+    }
+    return list;
   }
 }

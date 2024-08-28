@@ -6,7 +6,7 @@ class ReservationState extends Equatable {
   final String? courtName;
   final CourtType? courtType;
   final double? pricePerHour;
-  final Weather? weather;
+  final Weather? currentWeather;
   final String? adress;
   final LatLng? latLngLocation;
   final String? instructor;
@@ -25,7 +25,7 @@ class ReservationState extends Equatable {
     this.courtName,
     this.courtType,
     this.pricePerHour,
-    this.weather,
+    this.currentWeather,
     this.adress,
     this.latLngLocation,
     this.instructor,
@@ -43,7 +43,7 @@ class ReservationState extends Equatable {
     String? courtName,
     CourtType? courtType,
     double? pricePerHour,
-    Weather? weather,
+    Weather? currentWeather,
     String? adress,
     LatLng? latLngLocation,
     String? instructor,
@@ -60,7 +60,7 @@ class ReservationState extends Equatable {
         courtName: courtName ?? this.courtName,
         courtType: courtType ?? this.courtType,
         pricePerHour: pricePerHour ?? this.pricePerHour,
-        weather: weather ?? this.weather,
+        currentWeather: currentWeather ?? this.currentWeather,
         adress: adress ?? this.adress,
         latLngLocation: latLngLocation ?? this.latLngLocation,
         instructor: instructor ?? this.instructor,
@@ -79,7 +79,7 @@ class ReservationState extends Equatable {
         courtName,
         courtType,
         pricePerHour,
-        weather,
+        currentWeather,
         adress,
         latLngLocation,
         instructor,

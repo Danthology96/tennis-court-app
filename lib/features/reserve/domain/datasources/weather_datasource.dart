@@ -5,14 +5,14 @@ import 'package:tennis_court_app/features/reserve/reserve.dart';
 abstract class WeatherDataSource {
   /// function that gets the current weather of a location
   Future<Weather?> getDayWeather({
-    double lat,
-    double lng,
+    required double lat,
+    required double lng,
   });
 
   /// function that gets the weather forecast of a location
   Future<Weather?> getTimestampWeather({
-    double lat,
-    double lng,
-    DateTime timestamp,
+    required double lat,
+    required double lng,
+    required DateTime timestamp,
   });
 }

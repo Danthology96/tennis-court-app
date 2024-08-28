@@ -11,37 +11,72 @@ class ClimateWidget extends StatelessWidget {
   final Weather? weather;
   @override
   Widget build(BuildContext context) {
-    double? rainProb = 0;
-    if (weather != null) {
-      final rain = weather!.data!.firstWhere((element) {
-        rainProb = element.rain;
-        return rainProb! > 0;
-      });
-      debugPrint("${rain.rain}");
-    }
-    return Row(
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    double? rainProb = weather != null ? checkRainProbability(weather!) : 0;
+    final currentWeather = weather?.data?.first.weather?.first;
+    return Column(
       children: [
-        if (weather?.data?.first.weather?.first.icon != null)
-          FadeInImage(
-              width: 16,
-              height: 16,
-              placeholder: const AssetImage("assets/images/no-image.png"),
-              image: NetworkImage(
-                "$iconsServerUrl/${weather!.data!.first.weather!.first.icon}@2x.png",
-              ))
-        else
-          SvgPicture.asset(
-            'assets/icons/rainy_icon.svg',
-            width: 16,
-            height: 16,
-          ),
-        const SizedBox(width: 5),
-        Text(
-          rainProb != null ? "$rainProb" : 'N/A',
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
+        Row(
+          children: [
+            if (currentWeather != null)
+              FadeInImage(
+                width: 24,
+                height: 24,
+                placeholder: const AssetImage("assets/images/no-image.png"),
+                fit: BoxFit.cover,
+                image: NetworkImage(
+                  "$iconsServerUrl/${currentWeather.icon}@2x.png",
+                ),
+                color: colorScheme.tertiary,
+              )
+            else
+              SvgPicture.asset(
+                'assets/icons/rainy_icon.svg',
+                width: 16,
+                height: 16,
+              ),
+            const SizedBox(width: 5),
+            Text(
+              rainProb != null ? "$rainProb%" : 'N/A',
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+          ],
         ),
+        Text(
+          currentWeather?.description ?? 'N/A',
+          style: textTheme.labelSmall
+              ?.copyWith(color: colorScheme.onSurfaceVariant, fontSize: 8),
+        )
       ],
     );
+  }
+
+  double? checkRainProbability(Weather weather) {
+    double? rainProb = 0;
+    final currentWeather = weather.data!.first.weather!.first;
+
+    switch (currentWeather.main) {
+      case 'Rain':
+        rainProb = currentWeather.description == 'light rain' ? 30 : 60;
+        break;
+      case 'Drizzle':
+        rainProb = 40;
+        break;
+      case 'Thunderstorm':
+        rainProb = 80;
+        break;
+      case 'Snow':
+        rainProb = 50;
+        break;
+      case 'Clear':
+        rainProb = 0;
+        break;
+      case 'Clouds':
+        rainProb = 20;
+        break;
+    }
+    return rainProb;
   }
 }

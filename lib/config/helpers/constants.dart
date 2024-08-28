@@ -11,7 +11,8 @@ List<Court> defaultCourts = [
     name: 'Court 1',
     courtType: CourtType.A,
     pricePerHour: 10.0,
-    latLngLocation: LatLng(latitude: 37.7749, longitude: -122.4194),
+    latLngLocation:
+        LatLng(latitude: 6.252472222222222, longitude: -75.56533333333333),
     address: 'San Francisco, CA',
     instructors: ['Instructor 1', 'Instructor 2'],
     reservations: [1, 2],
