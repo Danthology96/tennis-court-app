@@ -81,10 +81,14 @@ class CalendarWidget extends StatelessWidget {
         monthViewSettings: DateRangePickerMonthViewSettings(
           dayFormat: "E",
           viewHeaderHeight: 30,
+
+          /// blackout dates will represent the unavailable dates
           blackoutDates: [
             DateTime(2024, 09, 18),
             DateTime(2024, 09, 19),
             DateTime(2024, 08, 31),
+            DateTime(2024, 09, 18),
+            DateTime(2024, 09, 17),
           ],
         ),
       ),
