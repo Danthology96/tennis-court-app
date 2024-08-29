@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tennis_court_app/config/theme/app_colors.dart';
 
 final appColorScheme = ColorScheme.fromSeed(
-  seedColor: AppColors.secondaryColor,
+  seedColor: AppColors.containerColor,
 ).copyWith(
-  primary: AppColors.primaryColor,
+  primary: AppColors.containerColor,
   secondary: AppColors.secondaryColor,
   tertiary: AppColors.tertiaryColor,
   surface: AppColors.primaryColor,
@@ -19,4 +19,6 @@ final appColorScheme = ColorScheme.fromSeed(
   /// used for gray text color
   onSurfaceVariant: AppColors.grayTextColor,
   surfaceContainer: AppColors.containerColor,
+  surfaceContainerHighest: AppColors.backgroundGrayColor,
+  onPrimaryFixedVariant: AppColors.grayColorAccent,
 );

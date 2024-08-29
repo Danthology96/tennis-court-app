@@ -1,1 +1,3 @@
-export 'welcome_screen.dart';
+export 'welcome_page.dart';
+export 'register_page.dart';
+export 'login_page.dart';

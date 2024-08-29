@@ -1,16 +1,25 @@
 # tennis_court_app
 
-A new Flutter project.
+Application to reserve tennis courts
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This application should run as any flutter project.
 
-A few resources to get you started if this is your first Flutter project:
+To execute the app, you should do the following:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+# To create a release apk
+run flutter build apk --release
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# To make changes in the local DB entities (Isar)
+flutter pub run build_runner build
+
+# Functionallity:
+
+The app uses an API KEY, the API_KEY will be provided, needs to copy the env_template, and rename it
+to ".env"
+
+The app uses local database (Isar technology), so, in order to make this app work, user needs to:
+1. Register a user.
+2. Login with the user credentials.
+3. The app should work as expected.
