@@ -31,6 +31,7 @@ class CustomCheckTileWidget extends StatelessWidget {
           onChanged: onChanged,
           // Need this to act as an "offset" of the checkbox default min padding
           visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+          checkColor: Theme.of(context).colorScheme.surface,
         ),
         SizedBox(width: horizontalGapPadding ?? 10),
         Text(

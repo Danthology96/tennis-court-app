@@ -124,8 +124,10 @@ class __LoginPageStateBody extends State<_LoginPageBody> {
                     prefixIcon:
                         const PrefixFormIcon(icon: Icons.email_outlined),
                     validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.email(),
+                      FormBuilderValidators.required(
+                          errorText: "El correo electrónico es requerido"),
+                      FormBuilderValidators.email(
+                          errorText: "El correo electrónico no es válido"),
                     ]),
                   ),
                   spacer,
@@ -146,8 +148,11 @@ class __LoginPageStateBody extends State<_LoginPageBody> {
                           });
                         }),
                     validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.minLength(6),
+                      FormBuilderValidators.required(
+                          errorText: "La contraseña es requerida"),
+                      FormBuilderValidators.minLength(6,
+                          errorText:
+                              "La contraseña debe tener al menos 6 caracteres"),
                     ]),
                   ),
                   spacer,

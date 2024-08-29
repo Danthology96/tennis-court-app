@@ -122,7 +122,8 @@ class __RegisterPageStateBody extends State<_RegisterPageBody> {
                     hintText: 'Nombre y apellido',
                     prefixIcon:
                         const PrefixFormIcon(icon: Icons.person_outline),
-                    validator: FormBuilderValidators.required(),
+                    validator: FormBuilderValidators.required(
+                        errorText: "El nombre es requerido"),
                   ),
                   spacer,
                   CustomTextFormField(
@@ -131,8 +132,10 @@ class __RegisterPageStateBody extends State<_RegisterPageBody> {
                     prefixIcon:
                         const PrefixFormIcon(icon: Icons.email_outlined),
                     validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.email(),
+                      FormBuilderValidators.required(
+                          errorText: "El correo electrónico es requerido"),
+                      FormBuilderValidators.email(
+                          errorText: "El correo electrónico no es válido"),
                     ]),
                   ),
                   spacer,
@@ -143,7 +146,8 @@ class __RegisterPageStateBody extends State<_RegisterPageBody> {
                         const PrefixFormIcon(icon: Icons.phone_outlined),
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(),
-                      FormBuilderValidators.numeric(),
+                      FormBuilderValidators.numeric(
+                          errorText: "El teléfono debe ser numérico"),
                     ]),
                   ),
                   spacer,
@@ -164,8 +168,11 @@ class __RegisterPageStateBody extends State<_RegisterPageBody> {
                           });
                         }),
                     validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.minLength(6),
+                      FormBuilderValidators.required(
+                          errorText: "La contraseña es requerida"),
+                      FormBuilderValidators.minLength(6,
+                          errorText:
+                              "La contraseña debe tener al menos 6 caracteres"),
                     ]),
                   ),
                   spacer,
