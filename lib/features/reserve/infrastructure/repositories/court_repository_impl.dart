@@ -25,4 +25,9 @@ class CourtRepositoryImpl extends CourtRepository {
   Future<Court?> getCourt({required String courtId}) async {
     return await dataSource!.getCourt(courtId: courtId);
   }
+
+  @override
+  Future<List<Court?>?> getCourtsById({required List<String> courtIds}) async {
+    return await dataSource!.getCourtsById(courtIds: courtIds);
+  }
 }

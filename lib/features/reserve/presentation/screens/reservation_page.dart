@@ -20,14 +20,14 @@ class ReservationPage extends StatelessWidget {
           court: court,
           user: context.read<AuthCubit>().state.user!,
           reservationsListCubit: context.read<ReservationsListCubit>()),
-      child: const _ReservationPageBody(),
+      child: _ReservationPageBody(court),
     );
   }
 }
 
 class _ReservationPageBody extends StatefulWidget {
-  const _ReservationPageBody();
-
+  const _ReservationPageBody(this.court);
+  final Court court;
   @override
   State<_ReservationPageBody> createState() => __ReservationPageBodyState();
 }
@@ -47,7 +47,10 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          ReservationAppbar(images: reservationCubit.state.images),
+          ReservationAppbar(
+            images: reservationCubit.state.images,
+            court: widget.court,
+          ),
           SliverList(
               delegate: SliverChildListDelegate([
             Padding(

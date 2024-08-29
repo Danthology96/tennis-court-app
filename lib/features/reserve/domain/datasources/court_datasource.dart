@@ -9,9 +9,12 @@ abstract class CourtDataSource {
   /// function that register all courts in the database, it requires the court's info
   Future<bool?> registerAllCourts(List<Map<String, dynamic>> courts);
 
-  /// function that gets the courts of a user
+  /// function that gets all the courts
   Future<List<Court?>?> getCourts();
 
   /// function that gets a court by its id
   Future<Court?> getCourt({required String courtId});
+
+  /// function that gets all the courts by an array of ids
+  Future<List<Court?>?> getCourtsById({required List<String> courtIds});
 }
