@@ -1,4 +1,4 @@
-# tennis_court_app
+# Tennis Court App
 
 Application to reserve tennis courts
 
