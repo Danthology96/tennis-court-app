@@ -59,8 +59,8 @@ class AuthDBDataSourceImpl implements AuthDataSource {
             email: user['email'],
             phone: user['phone'],
             password: user['password'],
-            token:
-                createToken(email: user['email'], password: user['password'])));
+            token: await createToken(
+                email: user['email'], password: user['password'])));
       });
 
       /// to simulate a loading time
