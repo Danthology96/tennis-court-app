@@ -18,6 +18,8 @@ class HomePage extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
     final authCubit = context.watch<AuthCubit>();
+    final reservationsListCubit = context.watch<ReservationsListCubit>();
+    final allReservations = reservationsListCubit.state.allReservations;
     const spacer = SizedBox(height: 20);
     const halfSpacer = SizedBox(height: 10);
 
@@ -61,15 +63,29 @@ class HomePage extends StatelessWidget {
                   )),
             ),
             halfSpacer,
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 3,
-              separatorBuilder: (context, index) => const SizedBox(height: 10),
-              itemBuilder: (context, index) {
-                return const ReservationTile();
-              },
-            ),
+            if (allReservations != null && allReservations.isNotEmpty)
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: allReservations.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 10),
+                itemBuilder: (context, index) {
+                  return ReservationTile(
+                    reservation: allReservations[index]!,
+                  );
+                },
+              )
+            else
+              Padding(
+                padding: appPaddingHorizontal,
+                child: Text(
+                  "No existen reservas programadas",
+                  style: textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
             spacer,
           ],
         ),
