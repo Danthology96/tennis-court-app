@@ -12,4 +12,7 @@ abstract class ReservationRepository {
 
   /// function that gets the user reservations
   Future<List<Reservation?>?> getUserReservations({required String userId});
+
+  /// function that deletes a reservation
+  Future<bool?> deleteReservation({required String reservationId});
 }

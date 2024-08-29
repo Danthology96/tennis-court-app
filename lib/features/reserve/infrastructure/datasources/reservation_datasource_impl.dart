@@ -55,17 +55,23 @@ class ReservationDatasourceImpl extends ReservationDataSource {
     final reservationExists =
         await reservations.filter().idEqualTo(reservation['id']).findFirst();
 
+    final currentReservation = Reservation.fromJson(reservation);
+
     /// Checks if the court is available (a court is not available if there are 3 reservations on the same day)
     final reservationsList = await reservations
         .filter()
         .courtIdEqualTo(reservation['courtId'])
-        .startDateEqualTo(reservation['startDate'])
+        .startDateBetween(
+            currentReservation.startDate?.copyWith(hour: 0, minute: 0),
+            currentReservation.endDate?.copyWith(hour: 23, minute: 59))
         .findAll();
     if (reservationsList.length >= 3) {
-      await closeLoadingScreen();
-      customToastAlerts(
-          type: AlertType.error,
-          message: 'No se puede reservar la cancha para esta fecha');
+      await closeLoadingScreen().then((value) {
+        customToastAlerts(
+            type: AlertType.error,
+            message: 'No se puede reservar la cancha para esta fecha');
+      });
+
       return false;
     }
 
@@ -95,5 +101,38 @@ class ReservationDatasourceImpl extends ReservationDataSource {
           message: 'Reservación registrada correctamente');
       return true;
     }
+  }
+
+  @override
+  Future<bool?> deleteReservation({required String reservationId}) async {
+    customToastAlerts(type: AlertType.loading);
+    final isar = await db;
+    final reservations = isar.reservations;
+
+    final reservationInDB =
+        await reservations.filter().idEqualTo(reservationId).findFirst();
+    if (reservationInDB == null) {
+      customToastAlerts(
+          type: AlertType.error,
+          message: 'No se pudo encontrar la reservación');
+      return false;
+    }
+
+    /// method to delete the reservation from the database
+    final result = await isar.writeTxn(() async {
+      return await reservations.delete(reservationInDB.isarId!);
+    });
+
+    /// to simulate a loading time
+    await closeLoadingScreen();
+    if (result) {
+      customToastAlerts(
+          type: AlertType.success,
+          message: 'Reservación eliminada correctamente');
+    } else {
+      customToastAlerts(
+          type: AlertType.error, message: 'No se pudo eliminar la reservación');
+    }
+    return result;
   }
 }

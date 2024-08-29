@@ -22,4 +22,9 @@ class ReservationRepositoryImpl extends ReservationRepository {
       {required Map<String, dynamic> reservation}) async {
     return await dataSource!.registerReservation(reservation: reservation);
   }
+
+  @override
+  Future<bool?> deleteReservation({required String reservationId}) async {
+    return await dataSource!.deleteReservation(reservationId: reservationId);
+  }
 }

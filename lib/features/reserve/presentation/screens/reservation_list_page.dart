@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tennis_court_app/config/config.dart';
 import 'package:tennis_court_app/features/auth/auth.dart';
 import 'package:tennis_court_app/features/reserve/reserve.dart';
@@ -93,8 +94,60 @@ class _ReservationListPageState extends State<ReservationListPage> {
                         separatorBuilder: (context, index) =>
                             const SizedBox(height: 10),
                         itemBuilder: (context, index) {
-                          return ReservationCard(
-                            reservation: userReservations![index]!,
+                          return Dismissible(
+                            key: Key(userReservations![index]!.id!),
+                            background: Container(
+                              color: Colors.red,
+                              margin: const EdgeInsets.all(5),
+                              padding: const EdgeInsets.only(left: 20),
+                              alignment: Alignment.centerLeft,
+                              child: Icon(Icons.delete,
+                                  color: colorScheme.surface),
+                            ),
+                            confirmDismiss: (direction) async {
+                              if (direction == DismissDirection.startToEnd) {
+                                final bool result = await showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        backgroundColor: colorScheme.surface,
+                                        title: const Text('Eliminar reserva'),
+                                        content: const Text(
+                                            '¿Estás seguro de que deseas eliminar esta reserva?'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              context.pop(false);
+                                            },
+                                            child: const Text('Cancelar'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () async {
+                                              await reservationsListCubit
+                                                  .deleteReservation(
+                                                reservationId:
+                                                    userReservations![index]!
+                                                        .id!,
+                                                userId: userId!,
+                                              )
+                                                  .then((result) {
+                                                if (result == true) {
+                                                  context.pop(true);
+                                                }
+                                              });
+                                            },
+                                            child: const Text('Eliminar'),
+                                          ),
+                                        ],
+                                      );
+                                    });
+                                return result;
+                              }
+                              return false;
+                            },
+                            child: ReservationCard(
+                              reservation: userReservations![index]!,
+                            ),
                           );
                         },
                       ),
