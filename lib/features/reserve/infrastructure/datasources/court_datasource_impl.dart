@@ -89,4 +89,15 @@ class CourtDatasourceImpl extends CourtDataSource {
 
     return await courts.filter().idEqualTo(courtId).findFirst();
   }
+
+  @override
+  Future<List<Court?>?> getCourtsById({required List<String> courtIds}) async {
+    final isar = await db;
+    final courts = isar.courts;
+
+    return await courts
+        .filter()
+        .anyOf(courtIds, (c, String id) => c.idEqualTo(id))
+        .findAll();
+  }
 }

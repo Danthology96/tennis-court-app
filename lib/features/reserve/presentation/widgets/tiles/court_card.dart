@@ -4,9 +4,12 @@ import 'package:tennis_court_app/features/reserve/reserve.dart';
 import 'package:tennis_court_app/features/shared/shared.dart';
 
 class CourtCard extends StatelessWidget {
-  const CourtCard({super.key, required this.court});
+  const CourtCard(
+      {super.key, required this.court, this.width, this.imageHeight});
 
   final Court court;
+  final double? width;
+  final double? imageHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +27,12 @@ class CourtCard extends StatelessWidget {
         children: [
           /// Image
           SizedBox(
-            width: 250,
+            width: width ?? 250,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.asset(
                 court.imagePaths?[0] ?? 'assets/images/no-image.png',
-                height: 130,
+                height: imageHeight ?? 130,
                 fit: BoxFit.fill,
               ),
             ),
@@ -38,7 +41,7 @@ class CourtCard extends StatelessWidget {
 
           /// content
           Container(
-            width: 250,
+            width: width ?? 250,
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(
               mainAxisSize: MainAxisSize.min,

@@ -1,17 +1,23 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tennis_court_app/features/reserve/reserve.dart';
 import 'package:tennis_court_app/features/shared/presentation/presentation.dart';
 
 class ReservationAppbar extends StatelessWidget {
-  const ReservationAppbar({super.key, this.images});
+  const ReservationAppbar({super.key, this.images, required this.court});
 
   final List<String>? images;
+
+  final Court court;
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final colorScheme = Theme.of(context).colorScheme;
+    final favoritesCubit = context.watch<FavoriteCourtsCubit>();
+    final isFavorite = _isFavorite(favoritesCubit);
     return SliverAppBar(
         expandedHeight: size.height * 0.4,
         leadingWidth: 100,
@@ -33,8 +39,19 @@ class ReservationAppbar extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.favorite_border),
-            onPressed: () {},
+            icon: Icon(
+              size: 32,
+              isFavorite == false ? Icons.favorite_border : Icons.favorite,
+              color:
+                  isFavorite == false ? colorScheme.surface : colorScheme.error,
+            ),
+            onPressed: () async {
+              if (isFavorite == true) {
+                favoritesCubit.removeFavoriteCourt(court);
+              } else {
+                favoritesCubit.addFavoriteCourt(court);
+              }
+            },
           ),
         ],
         flexibleSpace: (images == null)
@@ -72,5 +89,19 @@ class ReservationAppbar extends StatelessWidget {
                   ],
                 ),
               ));
+  }
+
+  bool _isFavorite(FavoriteCourtsCubit favoritesCubit) {
+    try {
+      final result = favoritesCubit.state.favoriteCourts
+          ?.firstWhere((e) => court.id == e?.id);
+      if (result != null) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
   }
 }
