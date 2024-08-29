@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:tennis_court_app/features/auth/presentation/providers/cubits/auth_cubit/auth_cubit.dart';
 import 'package:tennis_court_app/features/reserve/reserve.dart';
 import 'package:tennis_court_app/features/shared/shared.dart';
 
@@ -15,7 +16,8 @@ class ReservationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ReservationCubit(court: court),
+      create: (context) => ReservationCubit(
+          court: court, user: context.read<AuthCubit>().state.user!),
       child: const _ReservationPageBody(),
     );
   }
@@ -262,6 +264,9 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
                         filled: true,
                         fillColor: colorScheme.surface,
                       ),
+                      onChanged: (value) {
+                        reservationCubit.setCommentary(value);
+                      },
                     ),
                     spacer,
                     spacer,

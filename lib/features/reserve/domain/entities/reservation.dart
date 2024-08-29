@@ -32,6 +32,8 @@ class Reservation {
       startDate: DateTime.parse(json['startDate']),
       endDate: DateTime.parse(json['endDate']),
       commentary: json['commentary'],
+      weather:
+          json['weather'] != null ? Weather.fromJson(json['weather']) : null,
     );
   }
 
@@ -40,9 +42,11 @@ class Reservation {
       'id': id,
       'userId': userId,
       'roomId': courtId,
+      'courtId': courtId,
       'startDate': startDate?.toIso8601String(),
       'endDate': endDate?.toIso8601String(),
       'commentary': commentary,
+      'weather': weather?.toJson(),
     };
   }
 

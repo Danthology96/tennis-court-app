@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:tennis_court_app/features/reserve/reserve.dart';
 import 'package:tennis_court_app/features/shared/shared.dart';
@@ -103,8 +104,13 @@ class ReservationDetails extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 CustomFilledButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
+                  onPressed: () async {
+                    await reservationCubit.reserve().then((value) {
+                      if (value == true) {
+                        Navigator.of(context).pop();
+                        context.goNamed(HomePage.name);
+                      }
+                    });
                   },
                   text: 'Pagar',
                 ),
