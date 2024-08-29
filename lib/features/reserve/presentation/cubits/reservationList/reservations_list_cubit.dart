@@ -30,7 +30,15 @@ class ReservationsListCubit extends Cubit<ReservationListState> {
 
   Future<void> getAllReservations() async {
     final reservations = await reservationRepository.getReservations();
-    emit(state.copyWith(allReservations: reservations));
+
+    List<Reservation?> reservationsWithCourts = [];
+    if (reservations != null) {
+      for (var reservation in reservations) {
+        final court = await getReservationCourt(courtId: reservation!.courtId!);
+        reservationsWithCourts.add(reservation.copyWith(court: court));
+      }
+    }
+    emit(state.copyWith(allReservations: reservationsWithCourts));
   }
 
   Future<Court?> getReservationCourt({required String courtId}) async {
