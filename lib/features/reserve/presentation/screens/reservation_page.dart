@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:tennis_court_app/features/auth/presentation/providers/cubits/auth_cubit/auth_cubit.dart';
 import 'package:tennis_court_app/features/reserve/reserve.dart';
 import 'package:tennis_court_app/features/shared/shared.dart';
 
@@ -15,7 +16,10 @@ class ReservationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ReservationCubit(court: court),
+      create: (context) => ReservationCubit(
+          court: court,
+          user: context.read<AuthCubit>().state.user!,
+          reservationsListCubit: context.read<ReservationsListCubit>()),
       child: const _ReservationPageBody(),
     );
   }
@@ -249,7 +253,6 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
                     ),
                     spacer,
                     TextField(
-                      maxLines: null,
                       decoration: InputDecoration(
                         hintText: 'Escribe un comentario',
                         hintStyle: textTheme.bodyMedium,
@@ -262,13 +265,29 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
                         filled: true,
                         fillColor: colorScheme.surface,
                       ),
+                      onChanged: (value) {
+                        reservationCubit.setCommentary(value);
+                      },
                     ),
                     spacer,
                     spacer,
                     CustomFilledButton(
                       onPressed:
                           reservationCubit.state.isReservationValid == true
-                              ? () {}
+                              ? () async {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    backgroundColor: colorScheme.surface,
+                                    shape: const ContinuousRectangleBorder(),
+                                    builder: (context) {
+                                      return SingleChildScrollView(
+                                        child: ReservationDetails(
+                                          reservationCubit: reservationCubit,
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
                               : null,
                       text: 'Reservar',
                     ),

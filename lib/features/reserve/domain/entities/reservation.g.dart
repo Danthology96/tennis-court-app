@@ -143,6 +143,7 @@ Reservation _reservationDeserialize(
     courtId: reader.readStringOrNull(offsets[1]),
     endDate: reader.readDateTimeOrNull(offsets[2]),
     id: reader.readStringOrNull(offsets[3]),
+    isarId: id,
     startDate: reader.readDateTimeOrNull(offsets[4]),
     userId: reader.readStringOrNull(offsets[5]),
     weather: reader.readObjectOrNull<Weather>(
@@ -151,7 +152,6 @@ Reservation _reservationDeserialize(
       allOffsets,
     ),
   );
-  object.isarId = id;
   return object;
 }
 
@@ -194,9 +194,7 @@ List<IsarLinkBase<dynamic>> _reservationGetLinks(Reservation object) {
 }
 
 void _reservationAttach(
-    IsarCollection<dynamic> col, Id id, Reservation object) {
-  object.isarId = id;
-}
+    IsarCollection<dynamic> col, Id id, Reservation object) {}
 
 extension ReservationQueryWhereSort
     on QueryBuilder<Reservation, Reservation, QWhere> {

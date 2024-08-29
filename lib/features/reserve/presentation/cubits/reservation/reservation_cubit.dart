@@ -1,15 +1,50 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tennis_court_app/config/config.dart';
+import 'package:tennis_court_app/features/auth/auth.dart';
 import 'package:tennis_court_app/features/reserve/reserve.dart';
+import 'package:tennis_court_app/features/shared/shared.dart';
 
 part 'reservation_state.dart';
 
 class ReservationCubit extends Cubit<ReservationState> {
   final Court court;
+  final User user;
+  final ReservationsListCubit reservationsListCubit;
   final WeatherRepository weatherRepository = OpenWeatherRepository();
-  ReservationCubit({required this.court}) : super(const ReservationState()) {
+  final ReservationRepository reservationRepository =
+      ReservationRepositoryImpl();
+  ReservationCubit(
+      {required this.court,
+      required this.user,
+      required this.reservationsListCubit})
+      : super(const ReservationState()) {
     setCourtInfo(court);
+  }
+
+  Future<bool?> reserve() async {
+    if (state.isReservationValid == false) {
+      customToastAlerts(type: AlertType.error, message: 'Reserva no válida');
+      return false;
+    }
+
+    final reservation = Reservation(
+      courtId: state.courtId,
+      startDate: state.startDate!,
+      userId: user.id,
+      endDate: state.endDate!,
+      commentary: state.commentary,
+      weather: state.currentWeather,
+    );
+    final result = await reservationRepository.registerReservation(
+        reservation: reservation.toJson());
+
+    if (result == true) {
+      reservationsListCubit.getAllReservations();
+      reservationsListCubit.getUserReservations(userId: user.id);
+    }
+
+    return result;
   }
 
   void setReservation(Reservation reservation) {
@@ -36,7 +71,10 @@ class ReservationCubit extends Cubit<ReservationState> {
   }
 
   void setStartDate(DateTime startDate) {
-    emit(state.copyWith(startDate: startDate));
+    emit(state.copyWith(
+      startDate: startDate,
+    ));
+    setEndDate(startDate.add(const Duration(hours: 1)));
     checkIsReservationValid();
   }
 

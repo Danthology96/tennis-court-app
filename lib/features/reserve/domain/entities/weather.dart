@@ -57,7 +57,6 @@ class Current {
   final int? visibility;
   final double? windSpeed;
   final int? windDeg;
-  final double? rain;
   final List<WeatherElement>? weather;
 
   Current({
@@ -73,7 +72,6 @@ class Current {
     this.visibility,
     this.windSpeed,
     this.windDeg,
-    this.rain,
     this.weather,
   });
 
@@ -94,7 +92,6 @@ class Current {
         visibility: json["visibility"],
         windSpeed: json["wind_speed"]?.toDouble(),
         windDeg: json["wind_deg"],
-        rain: json["rain"]?.toDouble(),
         weather: json["weather"] == null
             ? []
             : List<WeatherElement>.from(
@@ -114,7 +111,6 @@ class Current {
         "visibility": visibility,
         "wind_speed": windSpeed,
         "wind_deg": windDeg,
-        "rain": rain,
         "weather": weather == null
             ? []
             : List<dynamic>.from(weather!.map((x) => x.toMap())),

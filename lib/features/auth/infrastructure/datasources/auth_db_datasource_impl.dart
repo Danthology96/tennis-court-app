@@ -5,6 +5,7 @@ import 'package:tennis_court_app/config/config.dart';
 
 import 'package:tennis_court_app/features/auth/domain/domain.dart';
 import 'package:tennis_court_app/features/auth/infrastructure/infrastructure.dart';
+import 'package:tennis_court_app/features/reserve/reserve.dart';
 import 'package:tennis_court_app/features/shared/presentation/widgets/toasts/toast_alerts_widget.dart';
 
 /// Class that contains the local db as the source
@@ -19,7 +20,7 @@ class AuthDBDataSourceImpl implements AuthDataSource {
     final dir = await getApplicationDocumentsDirectory();
     if (Isar.instanceNames.isEmpty) {
       return await Isar.open(
-        [UserSchema],
+        [UserSchema, CourtSchema, ReservationSchema],
         directory: dir.path,
         inspector: true,
       );
@@ -43,7 +44,7 @@ class AuthDBDataSourceImpl implements AuthDataSource {
       /// to simulate a loading time
       await closeLoadingScreen();
       customToastAlerts(
-          type: AlertType.success, message: 'Usuario registrado correctamente');
+          type: AlertType.success, message: 'Usuario no registrado');
       return false;
     } else {
       final random = Random();

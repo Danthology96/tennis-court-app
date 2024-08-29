@@ -663,44 +663,39 @@ const CurrentSchema = Schema(
       name: r'pressure',
       type: IsarType.long,
     ),
-    r'rain': PropertySchema(
-      id: 6,
-      name: r'rain',
-      type: IsarType.double,
-    ),
     r'sunrise': PropertySchema(
-      id: 7,
+      id: 6,
       name: r'sunrise',
       type: IsarType.long,
     ),
     r'sunset': PropertySchema(
-      id: 8,
+      id: 7,
       name: r'sunset',
       type: IsarType.long,
     ),
     r'temp': PropertySchema(
-      id: 9,
+      id: 8,
       name: r'temp',
       type: IsarType.double,
     ),
     r'visibility': PropertySchema(
-      id: 10,
+      id: 9,
       name: r'visibility',
       type: IsarType.long,
     ),
     r'weather': PropertySchema(
-      id: 11,
+      id: 10,
       name: r'weather',
       type: IsarType.objectList,
       target: r'WeatherElement',
     ),
     r'windDeg': PropertySchema(
-      id: 12,
+      id: 11,
       name: r'windDeg',
       type: IsarType.long,
     ),
     r'windSpeed': PropertySchema(
-      id: 13,
+      id: 12,
       name: r'windSpeed',
       type: IsarType.double,
     )
@@ -746,19 +741,18 @@ void _currentSerialize(
   writer.writeDouble(offsets[3], object.feelsLike);
   writer.writeLong(offsets[4], object.humidity);
   writer.writeLong(offsets[5], object.pressure);
-  writer.writeDouble(offsets[6], object.rain);
-  writer.writeLong(offsets[7], object.sunrise);
-  writer.writeLong(offsets[8], object.sunset);
-  writer.writeDouble(offsets[9], object.temp);
-  writer.writeLong(offsets[10], object.visibility);
+  writer.writeLong(offsets[6], object.sunrise);
+  writer.writeLong(offsets[7], object.sunset);
+  writer.writeDouble(offsets[8], object.temp);
+  writer.writeLong(offsets[9], object.visibility);
   writer.writeObjectList<WeatherElement>(
-    offsets[11],
+    offsets[10],
     allOffsets,
     WeatherElementSchema.serialize,
     object.weather,
   );
-  writer.writeLong(offsets[12], object.windDeg);
-  writer.writeDouble(offsets[13], object.windSpeed);
+  writer.writeLong(offsets[11], object.windDeg);
+  writer.writeDouble(offsets[12], object.windSpeed);
 }
 
 Current _currentDeserialize(
@@ -774,19 +768,18 @@ Current _currentDeserialize(
     feelsLike: reader.readDoubleOrNull(offsets[3]),
     humidity: reader.readLongOrNull(offsets[4]),
     pressure: reader.readLongOrNull(offsets[5]),
-    rain: reader.readDoubleOrNull(offsets[6]),
-    sunrise: reader.readLongOrNull(offsets[7]),
-    sunset: reader.readLongOrNull(offsets[8]),
-    temp: reader.readDoubleOrNull(offsets[9]),
-    visibility: reader.readLongOrNull(offsets[10]),
+    sunrise: reader.readLongOrNull(offsets[6]),
+    sunset: reader.readLongOrNull(offsets[7]),
+    temp: reader.readDoubleOrNull(offsets[8]),
+    visibility: reader.readLongOrNull(offsets[9]),
     weather: reader.readObjectList<WeatherElement>(
-      offsets[11],
+      offsets[10],
       WeatherElementSchema.deserialize,
       allOffsets,
       WeatherElement(),
     ),
-    windDeg: reader.readLongOrNull(offsets[12]),
-    windSpeed: reader.readDoubleOrNull(offsets[13]),
+    windDeg: reader.readLongOrNull(offsets[11]),
+    windSpeed: reader.readDoubleOrNull(offsets[12]),
   );
   return object;
 }
@@ -811,25 +804,23 @@ P _currentDeserializeProp<P>(
     case 5:
       return (reader.readLongOrNull(offset)) as P;
     case 6:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 7:
       return (reader.readLongOrNull(offset)) as P;
     case 8:
-      return (reader.readLongOrNull(offset)) as P;
-    case 9:
       return (reader.readDoubleOrNull(offset)) as P;
-    case 10:
+    case 9:
       return (reader.readLongOrNull(offset)) as P;
-    case 11:
+    case 10:
       return (reader.readObjectList<WeatherElement>(
         offset,
         WeatherElementSchema.deserialize,
         allOffsets,
         WeatherElement(),
       )) as P;
-    case 12:
+    case 11:
       return (reader.readLongOrNull(offset)) as P;
-    case 13:
+    case 12:
       return (reader.readDoubleOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1265,84 +1256,6 @@ extension CurrentQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<Current, Current, QAfterFilterCondition> rainIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'rain',
-      ));
-    });
-  }
-
-  QueryBuilder<Current, Current, QAfterFilterCondition> rainIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'rain',
-      ));
-    });
-  }
-
-  QueryBuilder<Current, Current, QAfterFilterCondition> rainEqualTo(
-    double? value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'rain',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Current, Current, QAfterFilterCondition> rainGreaterThan(
-    double? value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'rain',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Current, Current, QAfterFilterCondition> rainLessThan(
-    double? value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'rain',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Current, Current, QAfterFilterCondition> rainBetween(
-    double? lower,
-    double? upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'rain',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
       ));
     });
   }

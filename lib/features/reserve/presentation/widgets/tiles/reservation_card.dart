@@ -1,114 +1,99 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tennis_court_app/features/auth/auth.dart';
 import 'package:tennis_court_app/features/reserve/reserve.dart';
-import 'package:tennis_court_app/features/shared/shared.dart';
 
 class ReservationCard extends StatelessWidget {
-  const ReservationCard({super.key, required this.court});
+  const ReservationCard({super.key, required this.reservation});
 
-  final Court court;
+  final Reservation reservation;
 
   @override
   Widget build(BuildContext context) {
-    const spacer = SizedBox(height: 10);
+    const spacer = SizedBox(height: 5);
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+    final user = context.read<AuthCubit>().state.user;
 
     final captionTheme =
         textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w400);
+    final hours =
+        (reservation.endDate?.hour ?? 0) - (reservation.startDate?.hour ?? 0);
+    final price = (reservation.court?.pricePerHour ?? 0) * hours;
     return Card(
       color: colorScheme.surface,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          /// Image
-          SizedBox(
-            width: 250,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Image.asset(
-                court.imagePaths?[0] ?? 'assets/images/no-image.png',
-                height: 130,
-                fit: BoxFit.fill,
-              ),
-            ),
-          ),
-          spacer,
-
-          /// content
-          Container(
-            width: 250,
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+        side: BorderSide(
+          color: colorScheme.onSurface.withOpacity(0.1),
+          width: 1,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        court.name ?? 'Cancha de tenis',
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        style: textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const ClimateWidget(),
-                  ],
-                ),
-                Text("Cancha tipo ${court.courtType.name}",
-                    style: captionTheme),
-                spacer,
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.calendar_today_outlined,
-                      size: 13,
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      DateFormat("dd MMMM yyyy", "es").format(
-                        DateTime.now(),
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: captionTheme,
-                    ),
-                  ],
-                ),
-                spacer,
-                CourtAvailability(
-                  isAvailable: true,
-                  availableStartDate: DateTime.now(),
-                  availableEndDate: DateTime.now().copyWith(hour: 22),
-                ),
-                spacer,
-                spacer,
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: CustomFilledButton(
-                    onPressed: () {
-                      context.pushNamed(ReservationPage.name, extra: court);
-                    },
-                    height: 32,
-                    text: 'Reservar',
-                    textStyle: textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: colorScheme.surface,
+                SizedBox(
+                  width: 60,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      reservation.court?.imagePaths?[0] ??
+                          'assets/images/no-image.png',
+                      height: 60,
+                      fit: BoxFit.fill,
                     ),
                   ),
                 ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      reservation.court?.name ?? 'Cancha de tenis',
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    spacer,
+                    Text("Cancha tipo ${reservation.court?.courtType.name}",
+                        style: captionTheme),
+                    spacer,
+                    CourtReserveDateWidget(date: reservation.startDate),
+                    spacer,
+                    ReservedByWidget(
+                      user: user,
+                    ),
+                    spacer,
+                    Row(
+                      children: [
+                        IconRowDetail(
+                          text: "$hours ${hours > 1 ? 'horas' : 'hora'}",
+                          icon: Icons.schedule,
+                        ),
+                        Text(" | \$${price.toStringAsFixed(2)}",
+                            style: captionTheme),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: ClimateWidget(weather: reservation.court?.weather)),
               ],
-            ),
-          ),
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
