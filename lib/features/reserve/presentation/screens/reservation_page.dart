@@ -268,7 +268,20 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
                     CustomFilledButton(
                       onPressed:
                           reservationCubit.state.isReservationValid == true
-                              ? () {}
+                              ? () async {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    backgroundColor: colorScheme.surface,
+                                    shape: const ContinuousRectangleBorder(),
+                                    builder: (context) {
+                                      return SingleChildScrollView(
+                                        child: ReservationDetails(
+                                          reservationCubit: reservationCubit,
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }
                               : null,
                       text: 'Reservar',
                     ),
