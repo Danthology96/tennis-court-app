@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tennis_court_app/config/config.dart';
+import 'package:tennis_court_app/features/auth/infrastructure/infrastructure.dart';
 import 'package:tennis_court_app/features/reserve/reserve.dart';
 import 'package:tennis_court_app/features/shared/shared.dart';
 
@@ -18,7 +19,7 @@ class ReservationDatasourceImpl extends ReservationDataSource {
     final dir = await getApplicationDocumentsDirectory();
     if (Isar.instanceNames.isEmpty) {
       return await Isar.open(
-        [ReservationSchema],
+        [UserSchema, CourtSchema, ReservationSchema],
         directory: dir.path,
         inspector: true,
       );
@@ -31,7 +32,7 @@ class ReservationDatasourceImpl extends ReservationDataSource {
     final isar = await db;
     final reservations = isar.reservations;
 
-    return await reservations.getAll([]);
+    return await reservations.where().findAll();
   }
 
   @override

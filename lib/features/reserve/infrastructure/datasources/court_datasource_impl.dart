@@ -1,9 +1,9 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tennis_court_app/config/config.dart';
+import 'package:tennis_court_app/features/auth/auth.dart';
 import 'package:tennis_court_app/features/reserve/reserve.dart';
 import 'package:tennis_court_app/features/shared/shared.dart';
 
@@ -13,18 +13,13 @@ class CourtDatasourceImpl extends CourtDataSource {
 
   CourtDatasourceImpl() {
     db = openDB();
-    try {
-      registerAllCourts(defaultCourts.map((e) => e.toMap()).toList());
-    } catch (e) {
-      debugPrint(e.toString());
-    }
   }
 
   Future<Isar> openDB() async {
     final dir = await getApplicationDocumentsDirectory();
     if (Isar.instanceNames.isEmpty) {
       return await Isar.open(
-        [CourtSchema],
+        [UserSchema, CourtSchema, ReservationSchema],
         directory: dir.path,
         inspector: true,
       );
@@ -37,7 +32,7 @@ class CourtDatasourceImpl extends CourtDataSource {
     final isar = await db;
     final courts = isar.courts;
 
-    return await courts.getAll([]);
+    return await courts.where().findAll();
   }
 
   @override
@@ -77,7 +72,6 @@ class CourtDatasourceImpl extends CourtDataSource {
 
   @override
   Future<bool?> registerAllCourts(List<Map<String, dynamic>> courts) async {
-    customToastAlerts(type: AlertType.loading);
     final isar = await db;
     final currentCourts = isar.courts;
 
@@ -85,11 +79,6 @@ class CourtDatasourceImpl extends CourtDataSource {
     await isar.writeTxn(() async {
       await currentCourts.putAll(courts.map((e) => Court.fromMap(e)).toList());
     });
-
-    /// to simulate a loading time
-    await closeLoadingScreen();
-    customToastAlerts(
-        type: AlertType.success, message: 'Canchas registradas correctamente');
     return true;
   }
 }
