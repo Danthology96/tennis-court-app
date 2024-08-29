@@ -37,4 +37,16 @@ class ReservationsListCubit extends Cubit<ReservationListState> {
     final court = await courtRepository.getCourt(courtId: courtId);
     return court;
   }
+
+  Future<bool?> deleteReservation(
+      {required String reservationId, required String userId}) async {
+    final result = await reservationRepository.deleteReservation(
+      reservationId: reservationId,
+    );
+    if (result == true) {
+      getAllReservations();
+      getUserReservations(userId: userId);
+    }
+    return result;
+  }
 }
