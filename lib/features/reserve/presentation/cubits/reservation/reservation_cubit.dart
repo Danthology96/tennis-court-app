@@ -36,7 +36,10 @@ class ReservationCubit extends Cubit<ReservationState> {
   }
 
   void setStartDate(DateTime startDate) {
-    emit(state.copyWith(startDate: startDate));
+    emit(state.copyWith(
+      startDate: startDate,
+    ));
+    setEndDate(startDate.add(const Duration(hours: 1)));
     checkIsReservationValid();
   }
 
