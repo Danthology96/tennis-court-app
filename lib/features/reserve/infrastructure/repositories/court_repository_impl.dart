@@ -20,4 +20,9 @@ class CourtRepositoryImpl extends CourtRepository {
   Future<bool?> registerCourt({required Map<String, dynamic> court}) async {
     return await dataSource!.registerCourt(court: court);
   }
+
+  @override
+  Future<Court?> getCourt({required String courtId}) async {
+    return await dataSource!.getCourt(courtId: courtId);
+  }
 }

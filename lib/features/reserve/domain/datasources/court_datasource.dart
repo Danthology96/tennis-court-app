@@ -11,4 +11,7 @@ abstract class CourtDataSource {
 
   /// function that gets the courts of a user
   Future<List<Court?>?> getCourts();
+
+  /// function that gets a court by its id
+  Future<Court?> getCourt({required String courtId});
 }

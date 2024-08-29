@@ -6,7 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tennis_court_app/config/config.dart';
 import 'package:tennis_court_app/config/theme/app_theme.dart';
-import 'package:tennis_court_app/features/reserve/infrastructure/repositories/court_repository_impl.dart';
+import 'package:tennis_court_app/features/reserve/reserve.dart';
 
 import 'config/router/app_router.dart';
 import 'features/auth/auth.dart';
@@ -21,6 +21,9 @@ Future<void> main() async {
         authRepository: AuthDBRepositoryImpl(),
         secureStorageService: SecureStorageKeyValueStorageServiceImpl(),
       ),
+    ),
+    BlocProvider(
+      create: (context) => ReservationsListCubit(),
     ),
   ], child: const MyApp()));
 }

@@ -81,4 +81,12 @@ class CourtDatasourceImpl extends CourtDataSource {
     });
     return true;
   }
+
+  @override
+  Future<Court?> getCourt({required String courtId}) async {
+    final isar = await db;
+    final courts = isar.courts;
+
+    return await courts.filter().idEqualTo(courtId).findFirst();
+  }
 }

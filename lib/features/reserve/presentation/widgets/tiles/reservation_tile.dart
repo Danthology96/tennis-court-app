@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tennis_court_app/config/config.dart';
-import 'package:tennis_court_app/features/shared/shared.dart';
+import 'package:tennis_court_app/features/reserve/reserve.dart';
 
 class ReservationTile extends StatelessWidget {
   const ReservationTile({
@@ -54,26 +54,7 @@ class ReservationTile extends StatelessWidget {
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  Text(
-                    'Reservado por:',
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: captionTheme,
-                  ),
-                  const SizedBox(width: 5),
-                  Row(
-                    children: [
-                      const ProfileCircleAvatar(
-                        radius: 10,
-                      ),
-                      const SizedBox(width: 5),
-                      Text('Rafael Nadal', style: captionTheme),
-                    ],
-                  )
-                ],
-              ),
+              const ReservedByWidget(),
               Row(
                 children: [
                   const Icon(

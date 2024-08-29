@@ -10,10 +10,14 @@ part 'reservation_state.dart';
 class ReservationCubit extends Cubit<ReservationState> {
   final Court court;
   final User user;
+  final ReservationsListCubit reservationsListCubit;
   final WeatherRepository weatherRepository = OpenWeatherRepository();
   final ReservationRepository reservationRepository =
       ReservationRepositoryImpl();
-  ReservationCubit({required this.court, required this.user})
+  ReservationCubit(
+      {required this.court,
+      required this.user,
+      required this.reservationsListCubit})
       : super(const ReservationState()) {
     setCourtInfo(court);
   }
@@ -34,6 +38,11 @@ class ReservationCubit extends Cubit<ReservationState> {
     );
     final result = await reservationRepository.registerReservation(
         reservation: reservation.toJson());
+
+    if (result == true) {
+      reservationsListCubit.getAllReservations();
+      reservationsListCubit.getUserReservations(userId: user.id);
+    }
 
     return result;
   }

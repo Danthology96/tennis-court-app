@@ -36,7 +36,7 @@ class _CourtsHorizontalListViewState extends State<CourtsHorizontalListView> {
           if (court == null) return const SizedBox();
           return Padding(
             padding: const EdgeInsets.only(right: 10),
-            child: ReservationCard(court: court),
+            child: CourtCard(court: court),
           );
         }).toList(),
       ),

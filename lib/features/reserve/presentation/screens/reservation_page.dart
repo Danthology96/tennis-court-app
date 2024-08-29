@@ -17,7 +17,9 @@ class ReservationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ReservationCubit(
-          court: court, user: context.read<AuthCubit>().state.user!),
+          court: court,
+          user: context.read<AuthCubit>().state.user!,
+          reservationsListCubit: context.read<ReservationsListCubit>()),
       child: const _ReservationPageBody(),
     );
   }
@@ -251,7 +253,6 @@ class __ReservationPageBodyState extends State<_ReservationPageBody> {
                     ),
                     spacer,
                     TextField(
-                      maxLines: null,
                       decoration: InputDecoration(
                         hintText: 'Escribe un comentario',
                         hintStyle: textTheme.bodyMedium,
