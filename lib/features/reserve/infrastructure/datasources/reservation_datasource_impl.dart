@@ -55,6 +55,20 @@ class ReservationDatasourceImpl extends ReservationDataSource {
     final reservationExists =
         await reservations.filter().idEqualTo(reservation['id']).findFirst();
 
+    /// Checks if the court is available (a court is not available if there are 3 reservations on the same day)
+    final reservationsList = await reservations
+        .filter()
+        .courtIdEqualTo(reservation['courtId'])
+        .startDateEqualTo(reservation['startDate'])
+        .findAll();
+    if (reservationsList.length >= 3) {
+      await closeLoadingScreen();
+      customToastAlerts(
+          type: AlertType.error,
+          message: 'No se puede reservar la cancha para esta fecha');
+      return false;
+    }
+
     /// if the reservation exists, return false
     if (reservationExists != null) {
       /// to simulate a loading time

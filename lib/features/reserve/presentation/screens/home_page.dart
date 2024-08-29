@@ -21,7 +21,7 @@ class HomePage extends StatelessWidget {
     final reservationsListCubit = context.watch<ReservationsListCubit>();
     final allReservations = reservationsListCubit.state.allReservations;
     allReservations?.sort((a, b) => Comparable.compare(
-        a?.startDate as Comparable, b?.startDate as Comparable));
+        b?.startDate as Comparable, a?.startDate as Comparable));
     const spacer = SizedBox(height: 20);
     const halfSpacer = SizedBox(height: 10);
 
